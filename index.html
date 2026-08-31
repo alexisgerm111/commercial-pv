@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALIZÉO — S1·E1 : La Réactance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f0ece4;--bg-mid:#f5f2ec;--bg-panel:#eee9df;--bg-card:#ffffff;
+  --border:#ddd8cc;--border-em:#c8c0b0;
+  --gold:#9a7420;--gold-l:#c4922a;--gold-dim:rgba(154,116,32,.1);
+  --teal:#0d7a6e;--teal-dim:rgba(13,122,110,.08);
+  --red:#c43030;--red-dim:rgba(196,48,48,.07);
+  --blue:#2563a8;--blue-dim:rgba(37,99,168,.07);
+  --purple:#6d4fa0;
+  --txt:#1a1a2e;--txt-m:#4a4a5e;--txt-l:#8a8a9e;--txt-xl:#b8b8c8;
+  --mono:'JetBrains Mono',monospace;--disp:'Oswald',sans-serif;
+  --r4:4px;--r8:8px;--r12:12px;
+  --spring:cubic-bezier(.34,1.56,.64,1);--ease:cubic-bezier(.22,1,.36,1);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--mono);}
+#shell{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+
+/* ── HUD ── */
+#hud{height:46px;flex-shrink:0;display:flex;align-items:center;gap:0;background:var(--bg-panel);border-bottom:1px solid var(--border);padding:0 16px;z-index:10;}
+.hud-ep{font-size:.58rem;letter-spacing:2.5px;color:var(--txt-l);font-weight:600;text-transform:uppercase;margin-right:auto;}
+.hud-score{font-family:var(--disp);font-size:.72rem;color:var(--txt-l);letter-spacing:3px;margin-right:16px;}
+.hud-score b{color:var(--gold);font-size:1.05rem;}
+.profile-tag{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.58rem;margin-right:14px;}
+.profile-name{color:var(--txt-m);}
+.profile-title{color:var(--gold);font-family:var(--disp);letter-spacing:1px;}
+.hud-status{display:flex;align-items:center;gap:6px;font-size:.58rem;letter-spacing:2px;color:var(--teal);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 1.8s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(13,122,110,.45);}70%{box-shadow:0 0 0 9px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{height:32px;flex-shrink:0;display:flex;align-items:center;background:var(--bg);border-bottom:1px solid var(--border);padding:0 16px;gap:0;overflow:hidden;}
+.step-item{display:flex;align-items:center;gap:0;flex:1;opacity:.35;transition:opacity .4s var(--ease);}
+.step-item.active{opacity:1;}.step-item.done{opacity:.6;}
+.step-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--txt-xl);background:transparent;transition:all .4s var(--ease);flex-shrink:0;}
+.step-item.active .step-dot{border-color:var(--gold);background:var(--gold);box-shadow:0 0 0 3px var(--gold-dim);}
+.step-item.done .step-dot{border-color:var(--teal);background:var(--teal);}
+.step-label{font-size:.5rem;letter-spacing:1.5px;color:var(--txt-xl);margin-left:5px;text-transform:uppercase;white-space:nowrap;transition:color .4s;}
+.step-item.active .step-label{color:var(--gold);}.step-item.done .step-label{color:var(--teal);}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 6px;max-width:40px;}
+
+/* ── REP BAR ── */
+#rep-bar{height:30px;flex-shrink:0;display:flex;align-items:center;background:var(--bg-panel);border-bottom:1px solid var(--border);padding:0 16px;gap:0;}
+.rep-item{display:flex;align-items:center;gap:7px;flex:1;padding:0 8px;}
+.rep-item:not(:last-child){border-right:1px solid var(--border);}
+.rep-label{font-size:.5rem;letter-spacing:1.5px;color:var(--txt-l);white-space:nowrap;text-transform:uppercase;}
+.rep-track{flex:1;height:3px;background:var(--bg-card);border-radius:2px;overflow:hidden;border:1px solid var(--border);}
+.rep-fill{height:100%;width:0%;border-radius:2px;transition:width .7s var(--spring);}
+.rep-fill.posture{background:var(--blue);}.rep-fill.cadre{background:var(--gold);}
+.rep-fill.auth{background:var(--teal);}.rep-fill.conn{background:var(--purple);}
+.rep-val{font-family:var(--disp);font-size:.6rem;color:var(--txt-l);min-width:22px;text-align:right;}
+
+/* ── STAGE ── */
+#stage{
+  flex:0 0 56%;position:relative;overflow:hidden;background:var(--bg);
+}
+#stage::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 65%,rgba(240,236,228,.7));pointer-events:none;z-index:12;}
+#scene-bg{position:absolute;inset:0;width:100%;height:100%;}
+.ts{position:absolute;top:10px;left:12px;font-size:.5rem;letter-spacing:2px;color:var(--txt-xl);background:rgba(248,246,242,.88);border:1px solid var(--border);padding:3px 9px;z-index:15;border-radius:var(--r4);}
+.char{position:absolute;z-index:20;transition:opacity .5s var(--ease),transform .5s var(--ease);}
+#c-lucas{left:12%;bottom:8%;width:15%;aspect-ratio:200/290;}
+#c-durand{right:12%;bottom:8%;width:15%;aspect-ratio:200/290;}
+#c-bruno{left:50%;bottom:0;width:14%;aspect-ratio:200/290;transform:translateX(-50%) translateY(90px);opacity:0;z-index:30;}
+#c-bruno.in{transform:translateX(-50%) translateY(0);opacity:1;}
+#spotlight{position:absolute;inset:0;pointer-events:none;z-index:11;transition:background .5s var(--ease);}
+
+/* ── BULLES ── */
+.bubble{position:absolute;z-index:45;display:none;width:30%;max-width:300px;background:rgba(255,255,255,.97);border:1.5px solid var(--bc,#bbb);border-radius:var(--r8);padding:10px 14px;backdrop-filter:blur(6px);box-shadow:0 3px 14px rgba(0,0,0,.07);}
+.bubble.show{display:block;animation:bpop .2s var(--spring);}
+@keyframes bpop{from{transform:scale(.9) translateY(4px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+.b-speaker{font-family:var(--disp);font-size:.52rem;letter-spacing:2px;margin-bottom:4px;text-transform:uppercase;}
+.b-text{font-size:.72rem;line-height:1.48;color:var(--txt);min-height:1.2em;}
+#bl{left:3%;top:5%;}
+#br{right:3%;top:5%;}
+#bc{left:35%;top:3%;}
+#bl::after,#br::after,#bc::after{content:'';position:absolute;bottom:-7px;width:11px;height:11px;background:rgba(255,255,255,.97);border-right:1.5px solid var(--bc,#bbb);border-bottom:1.5px solid var(--bc,#bbb);transform:rotate(45deg);}
+#bl::after{left:26px;}#br::after{right:26px;}#bc::after{left:calc(50% - 5px);}
+
+#voff{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;width:88%;max-width:860px;background:rgba(248,246,242,.94);border:1px solid var(--border-em);border-left:3px solid var(--txt-l);padding:9px 16px;z-index:48;display:none;border-radius:0 var(--r4) var(--r4) 0;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+#voff.show{display:block;}
+#voff::before{content:'NARRATEUR';display:block;font-family:var(--disp);font-size:.48rem;letter-spacing:3px;color:var(--txt-xl);margin-bottom:3px;}
+#voff-text{font-size:.74rem;line-height:1.52;color:var(--txt-m);min-height:28px;}
+
+#click-hint{position:absolute;right:14px;bottom:12px;z-index:55;display:none;font-size:.52rem;letter-spacing:2px;color:var(--txt-l);pointer-events:none;animation:blink 1.8s infinite;background:rgba(248,246,242,.85);padding:3px 8px;border-radius:10px;}
+#click-hint.show{display:block;}
+@keyframes blink{0%,100%{opacity:.2;}50%{opacity:1;}}
+#clicker{position:absolute;inset:0;z-index:50;display:none;cursor:pointer;}
+#clicker.on{display:block;}
+
+/* ══ INTRO CINÉMA ══ */
+#intro-cinema{position:fixed;inset:0;z-index:2000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+#intro-cinema.hidden{display:none;}
+.cin-bars{position:absolute;left:0;right:0;height:80px;background:#000;z-index:5;}
+.cin-bar-top{top:0;}
+.cin-bar-bottom{bottom:0;}
+.cin-title-wrap{text-align:center;z-index:10;padding:0 40px;}
+.cin-series{font-family:var(--disp);font-size:.58rem;letter-spacing:8px;color:#666;margin-bottom:12px;text-transform:uppercase;opacity:0;animation:cfadein 1s ease .3s forwards;}
+.cin-ep-num{font-family:var(--disp);font-size:4.5rem;font-weight:700;color:#fff;line-height:1;letter-spacing:-2px;opacity:0;animation:cfadein .8s ease .8s forwards;}
+.cin-ep-sub{font-family:var(--disp);font-size:1.4rem;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-top:6px;opacity:0;animation:cfadein .8s ease 1.3s forwards;}
+.cin-tagline{font-family:var(--mono);font-size:.68rem;color:#888;letter-spacing:2px;margin-top:28px;max-width:500px;line-height:1.6;opacity:0;animation:cfadein .8s ease 1.8s forwards;}
+.cin-skip{position:absolute;bottom:20px;right:24px;z-index:20;font-family:var(--disp);font-size:.58rem;letter-spacing:3px;color:#444;cursor:pointer;padding:6px 16px;border:1px solid #333;border-radius:20px;transition:color .2s,border-color .2s;}
+.cin-skip:hover{color:#888;border-color:#555;}
+.cin-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.85) 100%);z-index:4;}
+/* Ligne dorée animée */
+.cin-line{position:absolute;bottom:50%;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);z-index:6;transform:scaleX(0);animation:lineexpand 1.2s ease 1s forwards;}
+@keyframes lineexpand{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+@keyframes cfadein{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.cin-progress{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:200px;height:2px;background:#222;border-radius:1px;z-index:20;overflow:hidden;}
+.cin-progress-fill{height:100%;background:var(--gold);border-radius:1px;width:0%;animation:progbar 3.5s linear 0s forwards;}
+@keyframes progbar{from{width:0%;}to{width:100%;}}
+
+/* ══ THEORY OVERLAY ══ */
+#theory-overlay{position:fixed;inset:0;background:rgba(240,236,228,.97);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);}
+#theory-overlay.on{display:flex;animation:fadein .3s var(--ease);}
+@keyframes fadein{from{opacity:0;}to{opacity:1;}}
+.th-inner{display:flex;gap:20px;width:100%;max-width:960px;max-height:90vh;align-items:flex-start;}
+.th-char{flex:0 0 90px;}
+.th-char svg{width:100%;height:auto;display:block;}
+.th-bubble{flex:1;background:var(--bg-card);border:1.5px solid var(--teal);border-radius:var(--r8);padding:18px 22px;position:relative;box-shadow:0 6px 28px rgba(0,0,0,.08);overflow-y:auto;max-height:85vh;}
+.th-bubble::before{content:'';position:absolute;left:-9px;top:20px;width:13px;height:13px;background:var(--bg-card);border-left:1.5px solid var(--teal);border-bottom:1.5px solid var(--teal);transform:rotate(45deg);}
+.th-kicker{font-family:var(--disp);font-size:.52rem;letter-spacing:3px;color:var(--teal);margin-bottom:5px;}
+.th-title{font-family:var(--disp);font-size:1rem;color:var(--txt);margin-bottom:10px;font-weight:600;line-height:1.3;}
+.th-body{font-size:.72rem;line-height:1.58;color:var(--txt-m);}
+.th-body p{margin-bottom:9px;}
+.th-body b{color:var(--txt);}
+.th-body blockquote{border-left:2px solid var(--gold);padding:7px 13px;margin:10px 0;color:var(--gold-l);font-size:.69rem;background:var(--gold-dim);border-radius:0 var(--r4) var(--r4) 0;font-style:italic;}
+.dd{border:1px solid;border-radius:var(--r4);padding:8px 12px;margin:7px 0;font-size:.67rem;line-height:1.5;}
+.dd em{display:block;margin-top:4px;opacity:.75;font-style:normal;}
+.dd span{font-family:var(--disp);font-size:.5rem;letter-spacing:2px;display:block;margin-bottom:4px;}
+.dd.dont{border-color:rgba(196,48,48,.3);color:#7a3a3a;background:var(--red-dim);}
+.dd.dont span{color:var(--red);}
+.dd.do{border-color:rgba(13,122,110,.3);color:#1a5a50;background:var(--teal-dim);}
+.dd.do span{color:var(--teal);}
+.th-nav{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.th-btn{background:var(--bg-mid);border:1px solid var(--border-em);color:var(--txt-m);padding:8px 20px;font-family:var(--disp);font-size:.68rem;letter-spacing:2px;cursor:pointer;border-radius:var(--r4);transition:all .15s;text-transform:uppercase;}
+.th-btn:hover{border-color:var(--teal);color:var(--teal);}
+.th-btn.primary{background:var(--teal);color:#fff;border-color:var(--teal);margin-left:auto;}
+.th-btn.primary:hover{background:#0e8e80;}
+.th-progress{display:flex;gap:5px;align-items:center;margin-left:auto;}
+.th-dot{width:7px;height:7px;border-radius:50%;background:var(--border-em);transition:background .3s;}
+.th-dot.cur{background:var(--teal);}.th-dot.done{background:rgba(13,122,110,.4);}
+
+/* ── INTERACTION ZONE ── */
+#interaction{flex:1;background:var(--bg-mid);border-top:1px solid var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;}
+#izone{padding:16px 24px;flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.idle-msg{color:var(--txt-xl);font-size:.62rem;letter-spacing:2px;text-align:center;margin:auto;}
+
+/* QCM */
+.q-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+.q-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-shrink:0;}
+.q-badge{font-family:var(--disp);font-size:.56rem;letter-spacing:3px;color:var(--gold);border:1px solid rgba(154,116,32,.3);padding:2px 10px;background:var(--gold-dim);border-radius:var(--r4);}
+.q-pts{font-size:.54rem;color:var(--txt-l);}
+.q-question{font-family:var(--disp);font-size:.88rem;color:var(--txt);margin-bottom:11px;line-height:1.35;flex-shrink:0;}
+.q-options{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.q-btn{display:flex;gap:10px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);color:var(--txt-m);padding:10px 13px;font-family:var(--mono);font-size:.7rem;line-height:1.4;text-align:left;cursor:pointer;border-radius:var(--r4);transition:all .14s var(--ease);box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.q-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold-l);transform:translateX(4px);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.q-letter{font-family:var(--disp);color:var(--txt-xl);font-size:.78rem;flex-shrink:0;padding-top:1px;}
+.q-btn.right{border-color:var(--teal);background:var(--teal-dim);color:#1a5a50;}
+.q-btn.right .q-letter{color:var(--teal);}
+.q-btn.wrong{border-color:var(--red);background:var(--red-dim);color:#8a3a3a;opacity:.65;pointer-events:none;}
+.q-btn.dim{opacity:.25;pointer-events:none;}
+.q-btn:disabled{pointer-events:none;}
+
+/* Feedback */
+#feedback-panel{display:none;flex-direction:column;overflow-y:auto;padding:16px 24px;}
+#feedback-panel.show{display:flex;}
+.fb-card{padding:11px 14px;border-left:3px solid #ccc;font-size:.73rem;line-height:1.52;color:var(--txt-m);border-radius:0 var(--r4) var(--r4) 0;background:var(--bg-card);box-shadow:0 1px 4px rgba(0,0,0,.03);margin-bottom:8px;}
+.fb-card.good{border-color:var(--teal);background:var(--teal-dim);color:#1a5a50;}
+.fb-card.hint{border-color:var(--gold);background:var(--gold-dim);color:var(--gold-l);}
+.fb-card.bad{border-color:var(--red);background:var(--red-dim);color:#8a3a3a;}
+.fb-name{font-family:var(--disp);font-size:.58rem;letter-spacing:2px;display:block;margin-bottom:4px;}
+.pts-line{font-family:var(--disp);color:var(--teal);letter-spacing:2px;margin-bottom:7px;font-size:.74rem;}
+.hint-label{font-family:var(--disp);font-size:.52rem;letter-spacing:2px;color:var(--gold);margin:8px 0 4px;border-top:1px dashed var(--border);padding-top:7px;}
+.retry-opts{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+.retry-btn{display:flex;gap:10px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);color:var(--txt-m);padding:8px 12px;font-family:var(--mono);font-size:.69rem;line-height:1.38;text-align:left;cursor:pointer;border-radius:var(--r4);transition:all .14s;}
+.retry-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold-l);}
+.retry-btn.right{border-color:var(--teal);background:var(--teal-dim);color:#1a5a50;pointer-events:none;}
+.retry-btn.wrong{border-color:var(--red);background:var(--red-dim);opacity:.55;pointer-events:none;}
+.fb-actions{display:flex;gap:8px;margin-top:10px;flex-shrink:0;}
+.btn-go{background:var(--teal);color:#fff;border:none;padding:9px 24px;font-family:var(--disp);font-size:.74rem;letter-spacing:2px;cursor:pointer;border-radius:var(--r4);text-transform:uppercase;transition:all .15s;}
+.btn-go:hover{background:#0e8e80;transform:translateY(-1px);}
+.btn-go.ghost{background:transparent;color:var(--txt-m);border:1px solid var(--border-em);}
+.btn-go.ghost:hover{border-color:var(--txt-m);}
+
+/* Pts pop */
+.pts-pop{position:fixed;top:40%;right:60px;font-family:var(--disp);font-size:1.6rem;color:var(--teal);letter-spacing:2px;animation:ptspop 1.6s var(--ease) forwards;z-index:2000;pointer-events:none;text-shadow:0 2px 8px rgba(13,122,110,.3);}
+@keyframes ptspop{from{opacity:0;transform:translateY(14px);}15%{opacity:1;}to{opacity:0;transform:translateY(-40px);}}
+
+.streak-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:7px 22px;border-radius:20px;font-family:var(--disp);font-size:.72rem;letter-spacing:2px;z-index:2100;animation:streakpop 2.2s var(--ease) forwards;pointer-events:none;box-shadow:0 4px 16px rgba(154,116,32,.35);}
+@keyframes streakpop{0%{opacity:0;transform:translateX(-50%) translateY(-10px);}10%{opacity:1;transform:translateX(-50%) translateY(0);}80%{opacity:1;}100%{opacity:0;transform:translateX(-50%) translateY(-6px);}}
+
+/* ── OVERLAYS ── */
+.ov{position:fixed;inset:0;background:var(--bg-mid);z-index:500;display:none;overflow-y:auto;padding:24px 32px 40px;}
+.ov.on{display:block;animation:fadein .35s var(--ease);}
+.ov-kicker{font-family:var(--disp);font-size:.56rem;letter-spacing:3px;color:var(--gold);margin-bottom:5px;}
+.ov-title{font-family:var(--disp);font-size:1.5rem;color:var(--txt);margin-bottom:16px;font-weight:600;}
+.ov-inner{max-width:760px;margin:0 auto;}
+.ov-breadcrumb{font-size:.5rem;letter-spacing:2px;color:var(--txt-xl);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.ov-breadcrumb span{color:var(--gold);}
+.ov-progress-mini{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden;max-width:120px;}
+.ov-progress-fill{height:100%;background:var(--gold);border-radius:1px;transition:width .5s var(--ease);}
+.reveal-choice{border:1px dashed var(--border-em);padding:10px 14px;color:var(--gold-l);font-size:.74rem;margin-bottom:14px;border-radius:var(--r4);background:var(--gold-dim);}
+.reveal-body p{font-size:.76rem;line-height:1.6;color:var(--txt-m);margin-bottom:10px;}
+.reveal-body b{color:var(--txt);}
+.rg-row{padding:9px 13px;border-left:3px solid;margin:7px 0;font-size:.72rem;line-height:1.5;border-radius:0 var(--r4) var(--r4) 0;}
+.rg-row.ok{border-color:var(--teal);color:#1a5a50;background:var(--teal-dim);}
+.reveal-common{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
+.reveal-common p{font-size:.76rem;line-height:1.6;color:var(--txt-m);}
+
+/* Bilan */
+.bilan-score{font-family:var(--disp);font-size:3.5rem;color:var(--teal);line-height:1;}
+.bs-max{font-family:var(--disp);font-size:.68rem;color:var(--txt-l);letter-spacing:3px;display:block;margin-bottom:18px;}
+.sdr-profile{margin:16px 0;padding:16px 20px;border:1px solid var(--border-em);border-radius:var(--r8);background:var(--bg-card);box-shadow:0 2px 10px rgba(0,0,0,.05);}
+.sp-label{font-size:.5rem;letter-spacing:2.5px;color:var(--txt-xl);font-family:var(--disp);margin-bottom:4px;}
+.sp-title{font-family:var(--disp);font-size:1.15rem;letter-spacing:1px;margin-bottom:5px;}
+.sp-desc{font-size:.72rem;color:var(--txt-m);line-height:1.52;}
+.rep-profile{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.rp-item{display:flex;align-items:center;gap:9px;}
+.rp-label{font-size:.58rem;color:var(--txt-l);width:72px;flex-shrink:0;}
+.rp-track{flex:1;height:5px;background:var(--bg);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
+.rp-fill{height:100%;border-radius:3px;transition:width .8s var(--spring);}
+.rp-fill.posture{background:var(--blue);}.rp-fill.cadre{background:var(--gold);}
+.rp-fill.auth{background:var(--teal);}.rp-fill.conn{background:var(--purple);}
+.bilan-row{display:grid;grid-template-columns:1.4fr 65px 1.6fr;gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--border);margin-bottom:7px;background:var(--bg-card);border-radius:var(--r4);box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.br-skill{font-family:var(--disp);font-size:.8rem;color:var(--txt);}
+.br-pts{font-family:var(--disp);font-size:1.05rem;text-align:center;}
+.br-verdict{font-size:.67rem;color:var(--txt-l);line-height:1.4;}
+.bilan-row.ok{border-left:3px solid var(--teal);}.bilan-row.ok .br-pts{color:var(--teal);}
+.bilan-row.mid{border-left:3px solid var(--gold);}.bilan-row.mid .br-pts{color:var(--gold);}
+.bilan-row.ko{border-left:3px solid var(--red);}.bilan-row.ko .br-pts{color:var(--red);}
+.bruno-memo{margin:14px 0;padding:16px 20px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r8);font-size:.71rem;line-height:1.62;color:var(--txt-m);}
+.bruno-memo-head{font-family:var(--disp);font-size:.56rem;letter-spacing:3px;color:var(--teal);margin-bottom:7px;}
+.bruno-memo b{color:var(--txt);}.bruno-memo em{color:var(--gold-l);font-style:normal;}
+
+/* Practice */
+.practice-desc{font-size:.78rem;line-height:1.62;color:var(--txt-m);margin-bottom:16px;}
+.practice-scenario{background:var(--bg-card);border:1px solid var(--border-em);border-left:3px solid var(--gold);padding:13px 17px;margin-bottom:22px;border-radius:0 var(--r4) var(--r4) 0;font-size:.74rem;color:var(--txt-m);line-height:1.52;}
+.practice-scenario b{color:var(--txt);}
+.mode-selector{display:flex;gap:14px;margin-bottom:12px;}
+.mode-btn{flex:1;padding:22px 16px;border:2px solid var(--border-em);border-radius:var(--r8);background:var(--bg-card);cursor:pointer;text-align:center;transition:all .2s var(--ease);font-family:var(--mono);position:relative;}
+.mode-btn:hover:not(:disabled){border-color:var(--teal);transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.07);}
+.mode-btn:disabled{opacity:.5;cursor:not-allowed;}
+.mode-icon{font-size:2.2rem;display:block;margin-bottom:9px;}
+.mode-label{font-family:var(--disp);font-size:.88rem;letter-spacing:2px;color:var(--txt);display:block;margin-bottom:4px;}
+.mode-desc{font-size:.64rem;color:var(--txt-l);line-height:1.42;}
+.mode-soon{display:inline-block;font-size:.53rem;letter-spacing:1.5px;color:var(--red);background:var(--red-dim);padding:2px 8px;border-radius:10px;margin-top:6px;font-family:var(--disp);text-transform:uppercase;}
+.mode-btn.active-mode{border-color:var(--teal);background:var(--teal-dim);}
+.practice-note{font-size:.63rem;color:var(--txt-xl);line-height:1.5;font-style:italic;}
+
+/* ══ CLIFFHANGER FINAL ══ */
+#ov-final{overflow:hidden;padding:0;}
+.cliff-wrap{position:relative;width:100%;height:100vh;background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+/* Fond ambiance : pluie lumineuse */
+.cliff-bg-lines{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.cliff-bg-lines::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,.018) 80px,rgba(255,255,255,.018) 81px);}
+/* Vignette */
+.cliff-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.85) 100%);pointer-events:none;z-index:2;}
+
+/* Score reveal animé */
+.cliff-score-reveal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;opacity:0;animation:cliff-score-in 1s ease 0.3s forwards;}
+@keyframes cliff-score-in{from{opacity:0;transform:translate(-50%,-60%);}to{opacity:1;transform:translate(-50%,-50%);}}
+.cliff-score-number{font-family:var(--disp);font-size:6rem;line-height:1;color:#fff;letter-spacing:-3px;}
+.cliff-score-sub{font-family:var(--disp);font-size:.7rem;letter-spacing:6px;color:var(--gold);margin-top:4px;}
+
+/* Transition vers épilogue */
+.cliff-episode-end{text-align:center;z-index:10;max-width:640px;padding:0 32px;}
+.cliff-fin-label{font-family:var(--disp);font-size:.55rem;letter-spacing:8px;color:var(--gold);margin-bottom:16px;opacity:0;animation:cfadein 1s ease 0.2s forwards;}
+.cliff-fin-title{font-family:var(--disp);font-size:3rem;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1px;margin-bottom:20px;opacity:0;animation:cfadein 1s ease 0.6s forwards;}
+.cliff-fin-body{font-size:.76rem;line-height:1.8;color:rgba(255,255,255,.6);margin-bottom:36px;opacity:0;animation:cfadein 1s ease 1s forwards;}
+
+/* Next ep — le vrai cliffhanger */
+.cliff-next{border:1px solid rgba(255,255,255,.12);border-top:2px solid var(--red);background:rgba(255,255,255,.04);padding:24px 28px;margin-bottom:28px;border-radius:var(--r8);text-align:left;opacity:0;animation:cfadein 1s ease 1.4s forwards;backdrop-filter:blur(4px);}
+.cliff-next-kicker{font-family:var(--disp);font-size:.5rem;letter-spacing:5px;color:var(--red);margin-bottom:10px;}
+.cliff-next-title{font-family:var(--disp);font-size:1.4rem;color:#fff;margin-bottom:14px;letter-spacing:.5px;}
+/* Extrait du dialogue — tension pure */
+.cliff-transcript{display:flex;flex-direction:column;gap:0;margin-bottom:14px;}
+.cliff-line{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);}
+.cliff-line:first-child{border-top:1px solid rgba(255,255,255,.07);}
+.cliff-speaker{font-family:var(--disp);font-size:.48rem;letter-spacing:3px;color:var(--gold);margin-bottom:3px;}
+.cliff-text{font-size:.74rem;color:rgba(255,255,255,.82);line-height:1.5;}
+.cliff-text.blurred{filter:blur(5px);user-select:none;color:rgba(255,255,255,.5);}
+/* Ligne de choc — la révélation bloquée */
+.cliff-reveal-locked{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(196,48,48,.12);border-top:1px solid rgba(196,48,48,.3);}
+.cliff-lock-icon{font-size:1.1rem;flex-shrink:0;}
+.cliff-lock-text{font-family:var(--disp);font-size:.62rem;letter-spacing:2px;color:var(--red);line-height:1.4;}
+/* Teaser texte ultra-tendu */
+.cliff-tease{font-size:.7rem;line-height:1.7;color:rgba(255,255,255,.5);font-style:italic;}
+.cliff-tease b{color:rgba(255,255,255,.82);font-style:normal;}
+
+/* Actions fin */
+.cliff-actions{display:flex;gap:12px;justify-content:center;opacity:0;animation:cfadein .8s ease 1.8s forwards;}
+.cliff-btn{padding:10px 28px;font-family:var(--disp);font-size:.72rem;letter-spacing:2px;cursor:pointer;border-radius:var(--r4);transition:all .2s;text-transform:uppercase;}
+.cliff-btn.primary{background:var(--teal);color:#fff;border:none;}
+.cliff-btn.primary:hover{background:#0e8e80;transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,122,110,.4);}
+.cliff-btn.ghost{background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.18);}
+.cliff-btn.ghost:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8);}
+
+/* Confetti */
+.confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;z-index:3000;pointer-events:none;animation:fall 2.5s ease-in forwards;}
+@keyframes fall{from{transform:translateY(-20px) rotate(0);opacity:1;}to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-mid);}
+::-webkit-scrollbar-thumb{background:var(--border-em);border-radius:2px;}
+
+/* TTS toggle */
+#btn-tts.muted{color:var(--red);border-color:rgba(196,48,48,.4);background:var(--red-dim);}
+@media(max-width:600px){
+  #stage{flex:0 0 48%;}
+  #c-lucas{left:5%;width:20%;}
+  #c-durand{right:5%;width:20%;}
+  .bubble{width:44%;font-size:.65rem;}
+  #rep-bar{flex-wrap:wrap;height:auto;padding:4px 8px;gap:2px;}
+  .rep-item{flex:1 0 45%;padding:2px 4px;}
+  .rep-label{font-size:.42rem;}
+  .hud-ep{display:none;}
+  .profile-tag{display:none;}
+  #progress-bar{padding:0 8px;}
+  .step-label{font-size:.38rem;}
+  .cliff-score-number{font-size:4rem;}
+  .cliff-fin-title{font-size:2rem;}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+<div id="shell">
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-ep">ALIZÉO · S1·E1 · LA RÉACTANCE</div>
+    <div class="hud-score">Score <b id="score-val">0</b>/15</div>
+    <div class="profile-tag">
+      <span class="profile-name">Vous</span>
+      <span class="profile-title" id="profile-title-hud">SDR</span>
+    </div>
+    <button id="btn-tts" title="Activer/désactiver la voix" style="background:transparent;border:1px solid var(--border);color:var(--txt-l);padding:3px 10px;border-radius:12px;font-size:.55rem;cursor:pointer;margin-right:10px;font-family:var(--disp);letter-spacing:1px;">🔊 SON ON</button>
+    <div class="hud-status"><span class="dot"></span><span id="status-lbl">INTRODUCTION</span></div>
+  </div>
+
+  <!-- ÉTAPES -->
+  <div id="progress-bar">
+    <div class="step-item active" data-step="0"><div class="step-dot"></div><span class="step-label">Intro</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="1"><div class="step-dot"></div><span class="step-label">Scène 1</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="2"><div class="step-dot"></div><span class="step-label">Analyse</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="3"><div class="step-dot"></div><span class="step-label">Théorie</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="4"><div class="step-dot"></div><span class="step-label">Rejeu</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="5"><div class="step-dot"></div><span class="step-label">Questions</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="6"><div class="step-dot"></div><span class="step-label">Bilan</span></div>
+    <div class="step-line"></div>
+    <div class="step-item" data-step="7"><div class="step-dot"></div><span class="step-label">Suite</span></div>
+  </div>
+
+  <!-- RÉPUTATION -->
+  <div id="rep-bar">
+    <div class="rep-item"><span class="rep-label">Posture</span><div class="rep-track"><div class="rep-fill posture" id="rp-posture"></div></div><span class="rep-val" id="rv-posture">--</span></div>
+    <div class="rep-item"><span class="rep-label">Cadre</span><div class="rep-track"><div class="rep-fill cadre" id="rp-cadre"></div></div><span class="rep-val" id="rv-cadre">--</span></div>
+    <div class="rep-item"><span class="rep-label">Authenticité</span><div class="rep-track"><div class="rep-fill auth" id="rp-auth"></div></div><span class="rep-val" id="rv-auth">--</span></div>
+    <div class="rep-item"><span class="rep-label">Connexion</span><div class="rep-track"><div class="rep-fill conn" id="rp-conn"></div></div><span class="rep-val" id="rv-conn">--</span></div>
+  </div>
+
+  <!-- SCÈNE -->
+  <div id="stage">
+    <svg id="scene-bg" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="900" height="540" fill="#f2ece0"/>
+      <rect x="0" y="0" width="900" height="320" fill="#ede7d8"/>
+      <rect x="0" y="318" width="900" height="10" fill="#c8b898"/>
+      <rect x="0" y="328" width="900" height="212" fill="#d4a96a"/>
+      <g stroke="#c09050" stroke-width=".8" opacity=".35">
+        <line x1="0" y1="355" x2="900" y2="355"/><line x1="0" y1="382" x2="900" y2="382"/>
+        <line x1="0" y1="409" x2="900" y2="409"/><line x1="0" y1="436" x2="900" y2="436"/>
+        <line x1="0" y1="463" x2="900" y2="463"/><line x1="0" y1="490" x2="900" y2="490"/>
+        <line x1="0" y1="517" x2="900" y2="517"/>
+        <line x1="150" y1="328" x2="150" y2="540"/><line x1="300" y1="328" x2="300" y2="540"/>
+        <line x1="450" y1="328" x2="450" y2="540"/><line x1="600" y1="328" x2="600" y2="540"/>
+        <line x1="750" y1="328" x2="750" y2="540"/>
+      </g>
+      <ellipse cx="450" cy="430" rx="280" ry="80" fill="#b8a080" opacity=".3"/>
+      <ellipse cx="450" cy="430" rx="260" ry="68" fill="none" stroke="#c0a878" stroke-width="2" opacity=".4"/>
+      <rect x="40" y="40" width="180" height="240" rx="6" fill="#b8d4e8" stroke="#c0a878" stroke-width="3"/>
+      <line x1="130" y1="40" x2="130" y2="280" stroke="#c0a878" stroke-width="3"/>
+      <line x1="40" y1="160" x2="220" y2="160" stroke="#c0a878" stroke-width="3"/>
+      <rect x="48" y="48" width="74" height="104" rx="2" fill="#cce0f0" opacity=".55"/>
+      <rect x="138" y="48" width="74" height="104" rx="2" fill="#cce0f0" opacity=".5"/>
+      <rect x="48" y="168" width="74" height="104" rx="2" fill="#cce0f0" opacity=".4"/>
+      <rect x="138" y="168" width="74" height="104" rx="2" fill="#cce0f0" opacity=".38"/>
+      <rect x="30" y="32" width="196" height="14" rx="4" fill="#c8b898"/>
+      <rect x="30" y="284" width="196" height="10" rx="4" fill="#c8b898"/>
+      <path d="M30 32 Q38 160 34 290 L54 290 Q56 160 50 32Z" fill="#d4c0a0" opacity=".7"/>
+      <path d="M226 32 Q218 160 222 290 L202 290 Q200 160 206 32Z" fill="#d4c0a0" opacity=".7"/>
+      <path d="M220 80 L420 250 L400 270 L200 100Z" fill="#f8f0d0" opacity=".12"/>
+      <rect x="260" y="260" width="380" height="90" rx="18" fill="#6a7a8a"/>
+      <rect x="245" y="272" width="38" height="72" rx="14" fill="#5a6a7a"/>
+      <rect x="617" y="272" width="38" height="72" rx="14" fill="#5a6a7a"/>
+      <rect x="272" y="250" width="356" height="24" rx="12" fill="#7a9aaa"/>
+      <rect x="290" y="268" width="80" height="52" rx="10" fill="#e8d0a0" transform="rotate(-2 330 294)"/>
+      <rect x="400" y="266" width="80" height="52" rx="10" fill="#d8b888" transform="rotate(1 440 292)"/>
+      <rect x="510" y="268" width="80" height="52" rx="10" fill="#e8d0a0" transform="rotate(-1 550 294)"/>
+      <rect x="308" y="350" width="12" height="20" rx="3" fill="#8a6a40"/>
+      <rect x="438" y="350" width="12" height="20" rx="3" fill="#8a6a40"/>
+      <rect x="568" y="350" width="12" height="20" rx="3" fill="#8a6a40"/>
+      <rect x="330" y="358" width="240" height="10" rx="4" fill="#b8904a"/>
+      <rect x="340" y="368" width="6" height="30" rx="2" fill="#a07838"/>
+      <rect x="554" y="368" width="6" height="30" rx="2" fill="#a07838"/>
+      <ellipse cx="390" cy="356" rx="14" ry="7" fill="#e8e0d0"/>
+      <ellipse cx="390" cy="352" rx="12" ry="6" fill="#f5f0e8"/>
+      <rect x="450" y="342" width="60" height="14" rx="2" fill="#ddd8cc"/>
+      <rect x="452" y="344" width="56" height="10" rx="1" fill="#eee9df"/>
+      <rect x="680" y="80" width="190" height="12" rx="3" fill="#c0a878"/>
+      <rect x="680" y="92" width="190" height="2" rx="1" fill="#a08858"/>
+      <rect x="690" y="48" width="18" height="32" rx="2" fill="#2a5a7a"/><rect x="710" y="52" width="14" height="28" rx="2" fill="#8a4a2a"/><rect x="726" y="46" width="20" height="34" rx="2" fill="#4a7a4a"/><rect x="748" y="54" width="12" height="26" rx="2" fill="#7a5a2a"/><rect x="762" y="49" width="16" height="31" rx="2" fill="#6a3a6a"/>
+      <rect x="380" y="45" width="140" height="100" rx="4" fill="#e8e0d0" stroke="#c8b080" stroke-width="3"/>
+      <rect x="390" y="55" width="120" height="80" rx="2" fill="#d0e0d8"/>
+      <circle cx="450" cy="95" r="18" fill="#a0c0b0" opacity=".6"/>
+      <path d="M418 110 Q438 85 458 95 Q478 105 502 88" stroke="#6a9a80" stroke-width="2" fill="none"/>
+      <rect x="800" y="280" width="28" height="48" rx="5" fill="#c8a060"/>
+      <ellipse cx="814" cy="275" rx="35" ry="38" fill="#4a8a3a"/>
+      <ellipse cx="795" cy="260" rx="22" ry="25" fill="#5a9a4a"/>
+      <ellipse cx="832" cy="265" rx="20" ry="22" fill="#3a7a2a"/>
+      <ellipse cx="814" cy="248" rx="18" ry="20" fill="#4a8a3a"/>
+      <line x1="450" y1="0" x2="450" y2="40" stroke="#b0a080" stroke-width="3"/>
+      <ellipse cx="450" cy="52" rx="40" ry="16" fill="#f0e8c8" stroke="#c8b080" stroke-width="2"/>
+      <ellipse cx="450" cy="44" rx="26" ry="10" fill="#f8f4e0" opacity=".8"/>
+      <ellipse cx="450" cy="200" rx="200" ry="120" fill="#fff9e0" opacity=".06"/>
+    </svg>
+
+    <div class="ts" id="ts-scene">SALON MME DURAND · SAINT-ÉTIENNE · 14H30</div>
+    <div id="spotlight"></div>
+    <div class="char" id="c-lucas"></div>
+    <div class="char" id="c-durand"></div>
+    <div class="char" id="c-bruno"></div>
+    <div class="bubble" id="bl"><div class="b-speaker"></div><div class="b-text"></div></div>
+    <div class="bubble" id="br"><div class="b-speaker"></div><div class="b-text"></div></div>
+    <div class="bubble" id="bc"><div class="b-speaker"></div><div class="b-text"></div></div>
+    <div id="voff"><span id="voff-text"></span></div>
+    <div id="click-hint">CLIQUER POUR AVANCER →</div>
+    <div id="clicker"></div>
+  </div>
+
+  <!-- INTERACTION -->
+  <div id="interaction">
+    <div id="izone"><div class="idle-msg">— SCÈNE EN COURS —</div></div>
+    <div id="feedback-panel"></div>
+  </div>
+</div>
+
+<!-- ══ INTRO CINÉMA ══ -->
+<div id="intro-cinema">
+  <div class="cin-bg-lines"></div>
+  <div class="cin-vignette"></div>
+  <div class="cin-bar-top cin-bars"></div>
+  <div class="cin-bar-bottom cin-bars"></div>
+  <div class="cin-line"></div>
+  <div class="cin-title-wrap">
+    <div class="cin-series">ALIZÉO · SAISON 1 · ÉPISODE 1</div>
+    <div class="cin-ep-num">LA RÉACTANCE</div>
+    <div class="cin-ep-sub">Pourquoi argumenter tue la vente</div>
+    <div class="cin-tagline">Mme Durand a rempli un formulaire de contact il y a trois semaines. Elle est intéressée. Elle peut signer. Et dans 8 minutes, Lucas va tout rater.</div>
+  </div>
+  <div class="cin-progress"></div>
+  <div class="cin-skip" id="btn-skip-intro">PASSER →</div>
+</div>
+
+<!-- ══ THEORY OVERLAY ══ -->
+<div id="theory-overlay">
+  <div class="th-inner">
+    <div class="th-char" id="th-char"></div>
+    <div class="th-bubble">
+      <div class="th-kicker" id="th-kicker"></div>
+      <div class="th-title" id="th-title"></div>
+      <div class="th-body" id="th-body"></div>
+      <div class="th-nav">
+        <button class="th-btn" id="th-prev" style="visibility:hidden;">← Précédent</button>
+        <div class="th-progress" id="th-progress"></div>
+        <button class="th-btn primary" id="th-next">Suivant →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REVEAL ══ -->
+<div class="ov" id="ov-reveal">
+  <div class="ov-inner">
+    <div class="ov-breadcrumb">INTRO <span>›</span> Analyse de votre réponse <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:14%"></div></div></div>
+    <div class="ov-kicker">Ce qui se passe réellement</div>
+    <h2 class="ov-title">Quand un prospect dit « c'est trop cher »…</h2>
+    <div id="rv-choice" class="reveal-choice"></div>
+    <div id="rv-body" class="reveal-body"></div>
+    <div class="reveal-common">
+      <p>Ce qui compte : ce n'est pas le prix qui bloque. C'est la façon dont vous y répondez. Chaque argument que vous avancez <b>renforce le mur</b> au lieu de le franchir. Lucas va en faire la douloureuse expérience.</p>
+    </div>
+    <div style="margin-top:18px;">
+      <button class="btn-go" id="btn-enter-scene">Entrer dans le salon →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRACTICE MID ══ -->
+<div class="ov" id="ov-practice-mid">
+  <div class="ov-inner">
+    <div class="ov-breadcrumb">THÉORIE <span>›</span> Mise en pratique <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:57%"></div></div></div>
+    <div class="ov-kicker">À vous de jouer</div>
+    <h2 class="ov-title">Avant de voir Lucas l'appliquer</h2>
+    <p class="practice-desc">Vous venez de voir la méthode en trois temps. Avant le rejeu, mettez-vous mentalement en situation.</p>
+    <div class="practice-scenario">
+      <b>Vous êtes en face d'un prospect.</b> Il vient de dire : <em>« 18 000 euros, c'est trop cher pour nous. »</em><br><br>
+      Formulez votre première phrase — celle que vous diriez dans les trois secondes qui suivent. Pas dans votre tête. À voix haute. Maintenant.
+    </div>
+    <div class="mode-selector">
+      <button class="mode-btn" disabled>
+        <span class="mode-icon">🎙️</span>
+        <span class="mode-label">Mode Vocal</span>
+        <span class="mode-desc">Parlez — analyse en temps réel</span>
+        <span class="mode-soon">Prochainement</span>
+      </button>
+      <button class="mode-btn active-mode" id="mode-keyboard-mid">
+        <span class="mode-icon">▶</span>
+        <span class="mode-label">Voir le rejeu</span>
+        <span class="mode-desc">Observer Lucas appliquer la méthode</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BILAN ══ -->
+<div class="ov" id="ov-bilan">
+  <div class="ov-inner">
+    <div class="ov-breadcrumb">QUESTIONS <span>›</span> Bilan <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:86%"></div></div></div>
+    <div class="ov-kicker">Diagnostic personnalisé · Épisode 1</div>
+    <h2 class="ov-title" id="bil-title">Analyse de votre session</h2>
+    <div class="bilan-score" id="bil-pts">0</div>
+    <span class="bs-max">POINTS SUR 15</span>
+    <div class="sdr-profile">
+      <div class="sp-label">PROFIL SDR · ÉPISODE 1</div>
+      <div class="sp-title" id="sdr-profile-title"></div>
+      <div class="sp-desc" id="sdr-profile-desc"></div>
+      <div class="rep-profile" id="rep-profile-bars"></div>
+    </div>
+    <div id="bil-rows"></div>
+    <div class="bruno-memo" id="bruno-memo-text"></div>
+    <div style="margin-top:16px;">
+      <button class="btn-go" id="btn-to-practice-end">Pratique finale →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRACTICE END ══ -->
+<div class="ov" id="ov-practice-end">
+  <div class="ov-inner">
+    <div class="ov-breadcrumb">BILAN <span>›</span> Pratique finale <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:93%"></div></div></div>
+    <div class="ov-kicker">Mise en pratique · 2/2</div>
+    <h2 class="ov-title">Une dernière situation</h2>
+    <p class="practice-desc">Même prospect. Nouvelle objection.</p>
+    <div class="practice-scenario">
+      <em>« Je ne suis pas sûre que ça marche chez moi — mon toit est orienté nord-est. »</em><br><br>
+      <b>Votre mission :</b> Formulez votre réponse en trois temps. À voix haute.<br><br>
+      Temps 1 — une question de clarification.<br>
+      Temps 2 — une question qui la fait réfléchir.<br>
+      Temps 3 — une image concrète. Pas un chiffre. Une image.
+    </div>
+    <div class="mode-selector">
+      <button class="mode-btn" disabled>
+        <span class="mode-icon">🎙️</span>
+        <span class="mode-label">Mode Vocal</span>
+        <span class="mode-desc">Entraînement oral avec feedback</span>
+        <span class="mode-soon">Prochainement</span>
+      </button>
+      <button class="mode-btn active-mode" id="mode-keyboard-end">
+        <span class="mode-icon">✓</span>
+        <span class="mode-label">Terminer l'épisode</span>
+        <span class="mode-desc">Voir la suite — si vous l'avez méritée</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FINAL — CLIFFHANGER ══ -->
+<div class="ov" id="ov-final">
+  <div class="cliff-wrap">
+    <div class="cliff-bg-lines"></div>
+    <div class="cliff-vignette"></div>
+    <div class="cliff-episode-end">
+      <div class="cliff-fin-label">FIN DE L'ÉPISODE 1</div>
+      <div class="cliff-fin-title">Lucas a compris.<br>Ça ne suffira pas.</div>
+      <div class="cliff-fin-body">
+        Maîtriser la réactance face à une objection de prix, c'est le niveau 1. Il existe des prospects que cette méthode ne peut pas atteindre — pas encore. Pas comme ça.<br><br>
+        Lucas va en rencontrer un la semaine prochaine. Et il va faire quelque chose qu'il a juré de ne plus jamais faire.
+      </div>
+
+      <div class="cliff-next">
+        <div class="cliff-next-kicker">ÉPISODE 2 · VERROUILLÉ</div>
+        <div class="cliff-next-title">Le Mur Idéologique</div>
+        <div class="cliff-transcript">
+          <div class="cliff-line">
+            <div class="cliff-speaker" style="color:var(--gold);">LUCAS</div>
+            <div class="cliff-text">Qu'est-ce qui vous a amené à cette conviction ?</div>
+          </div>
+          <div class="cliff-line">
+            <div class="cliff-speaker" style="color:#7a9ab8;">M. LEROY</div>
+            <div class="cliff-text">Mon voisin en a installé il y a deux ans. Sa facture n'a pas bougé d'un centime. Ces systèmes, c'est du marketing, rien d'autre.</div>
+          </div>
+          <div class="cliff-line">
+            <div class="cliff-speaker" style="color:var(--gold);">LUCAS</div>
+            <div class="cliff-text class" style="font-style:italic;color:rgba(255,255,255,.4);">[Il marque une pause. Il sait ce qui va sortir de sa bouche. Il sait qu'il ne devrait pas.]</div>
+          </div>
+          <div class="cliff-line">
+            <div class="cliff-speaker" style="color:var(--gold);">LUCAS</div>
+            <div class="cliff-text blurred">Votre voisin a tort. Et je vais vous montrer pourquoi.</div>
+          </div>
+          <div class="cliff-line">
+            <div class="cliff-speaker" style="color:#7a9ab8;">M. LEROY</div>
+            <div class="cliff-text blurred">Je pense que vous feriez mieux de partir.</div>
+          </div>
+        </div>
+        <div class="cliff-reveal-locked">
+          <span class="cliff-lock-icon">⛔</span>
+          <div>
+            <div class="cliff-lock-text">ÉPISODE 2 — DISPONIBLE MARDI</div>
+            <div class="cliff-tease">Lucas vient de dire les quatre mots qui ne pardonnent pas. Et M. Leroy n'est pas Mme Durand. <b>Lui, il ne réfléchit plus. Il a décidé.</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cliff-actions">
+        <button class="cliff-btn ghost" onclick="location.reload()">↺ Revoir l'épisode</button>
+        <button class="cliff-btn primary" id="cliff-notify">Me notifier à la sortie →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ══ SVG PERSONNAGES ══ */
+var SVG_LUCAS = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+  <path d="M45 320 L45 240 Q45 208 72 196 L128 196 Q155 208 155 240 L155 320 Z" fill="#2a4a72"/>
+  <path d="M90 196 L100 218 L110 196 L105 192 L100 210 L95 192 Z" fill="#4a6a92"/>
+  <path d="M88 196 L92 214 L100 206 L108 214 L112 196" fill="#7a9ab8" stroke="#5a7a98" stroke-width="1"/>
+  <g id="lk-arm-n"><path d="M45 228 Q24 240 22 268" stroke="#2a4a72" stroke-width="20" fill="none" stroke-linecap="round"/><ellipse cx="22" cy="272" rx="11" ry="9" fill="#e0ac7d"/></g>
+  <g id="lk-arm-g" style="display:none"><path d="M45 228 Q20 210 16 182" stroke="#2a4a72" stroke-width="20" fill="none" stroke-linecap="round"/><ellipse cx="16" cy="178" rx="10" ry="9" fill="#e0ac7d"/></g>
+  <g id="lk-arm-r"><path d="M155 228 Q176 240 178 268" stroke="#2a4a72" stroke-width="20" fill="none" stroke-linecap="round"/><ellipse cx="178" cy="272" rx="11" ry="9" fill="#e0ac7d"/></g>
+  <g id="lk-arms-open" style="display:none"><path d="M45 228 Q16 218 12 192" stroke="#2a4a72" stroke-width="18" fill="none" stroke-linecap="round"/><ellipse cx="12" cy="188" rx="10" ry="8" fill="#e0ac7d"/><path d="M155 228 Q184 218 188 192" stroke="#2a4a72" stroke-width="18" fill="none" stroke-linecap="round"/><ellipse cx="188" cy="188" rx="10" ry="8" fill="#e0ac7d"/></g>
+  <rect x="88" y="168" width="24" height="32" rx="10" fill="#e0ac7d"/>
+  <ellipse cx="62" cy="148" rx="10" ry="13" fill="#d4a070"/>
+  <ellipse cx="138" cy="148" rx="10" ry="13" fill="#d4a070"/>
+  <ellipse cx="100" cy="136" rx="42" ry="48" fill="#f0bd90"/>
+  <path d="M58 132 Q56 76 100 70 Q144 76 142 132 Q140 98 122 90 Q110 82 88 86 Q68 92 62 110 Q58 120 58 132Z" fill="#2a1a0e"/>
+  <path d="M58 132 Q56 78 100 70 Q72 76 62 100 Q57 116 58 132Z" fill="#1e1208"/>
+  <g id="lk-brow-n"><path d="M74 122 q14-5 24 0" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M102 122 q14-5 24 0" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+  <g id="lk-brow-s" style="display:none"><path d="M76 116 q10-2 18 8" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M106 124 q10-10 18-5" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+  <g id="lk-brow-c" style="display:none"><path d="M74 122 h24" stroke="#2a1a0e" stroke-width="4" stroke-linecap="round"/><path d="M102 122 h24" stroke="#2a1a0e" stroke-width="4" stroke-linecap="round"/></g>
+  <g id="lk-brow-t" style="display:none"><path d="M74 120 q14-6 22 0" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M104 126 q10 2 22-2" stroke="#2a1a0e" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+  <ellipse cx="84" cy="138" rx="7" ry="8" fill="#1e1818"/>
+  <ellipse cx="116" cy="138" rx="7" ry="8" fill="#1e1818"/>
+  <ellipse cx="86" cy="136" rx="2.5" ry="3" fill="#fff"/>
+  <ellipse cx="118" cy="136" rx="2.5" ry="3" fill="#fff"/>
+  <path d="M100 142 q5 11-3 16" stroke="#c08050" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path class="mouth-closed" d="M88 164 q12 4 22 0" stroke="#8a4a34" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <g class="mouth-open" style="display:none"><path d="M88 162 q12 5 22 0" stroke="#7a3a28" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse id="lk-mouth-ellipse" cx="99" cy="165" rx="8" ry="4" fill="#6a2a1a"/></g>
+  <path class="mouth-sad" style="display:none" d="M90 168 q10-6 20 0" stroke="#8a4a34" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path class="mouth-smile" style="display:none" d="M86 160 q14 10 26 0" stroke="#8a4a34" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path class="mouth-think" style="display:none" d="M92 164 q8 1 14 0" stroke="#8a4a34" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path class="sweat" style="display:none" d="M148 112 q8 12 0 18 q-8-6 0-18" fill="#7fd4ff"/>
+</svg>`;
+
+var SVG_DURAND = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+  <path d="M38 320 L38 238 Q38 205 65 195 L135 195 Q162 205 162 238 L162 320 Z" fill="#8a6a8a"/>
+  <path d="M86 195 L100 218 L114 195 Q108 190 100 208 Q92 190 86 195Z" fill="#9a7a9a"/>
+  <circle cx="100" cy="230" r="3" fill="#c8a8c8" stroke="#a888a8" stroke-width="1"/>
+  <circle cx="100" cy="252" r="3" fill="#c8a8c8" stroke="#a888a8" stroke-width="1"/>
+  <g id="du-arms-cross"><path d="M38 222 Q60 238 95 228" stroke="#8a6a8a" stroke-width="18" fill="none" stroke-linecap="round"/><path d="M162 222 Q140 238 105 228" stroke="#8a6a8a" stroke-width="18" fill="none" stroke-linecap="round"/><ellipse cx="95" cy="228" rx="12" ry="9" fill="#e6bd97"/><ellipse cx="105" cy="228" rx="12" ry="9" fill="#e6bd97"/></g>
+  <g id="du-arms-n" style="display:none"><path d="M38 222 Q16 232 14 256" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/><ellipse cx="14" cy="260" rx="10" ry="8" fill="#e6bd97"/><path d="M162 222 Q184 232 186 256" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/><ellipse cx="186" cy="260" rx="10" ry="8" fill="#e6bd97"/></g>
+  <g id="du-arms-open" style="display:none"><path d="M38 222 Q15 212 13 188" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="184" rx="9" ry="8" fill="#e6bd97"/><path d="M162 222 Q185 212 187 188" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/><ellipse cx="187" cy="184" rx="9" ry="8" fill="#e6bd97"/></g>
+  <rect x="88" y="168" width="24" height="30" rx="10" fill="#e6bd97"/>
+  <ellipse cx="60" cy="144" rx="10" ry="12" fill="#dab088"/>
+  <ellipse cx="140" cy="144" rx="10" ry="12" fill="#dab088"/>
+  <circle cx="60" cy="154" r="5" fill="#e8e0d0" stroke="#c8b898" stroke-width="1.2"/>
+  <circle cx="140" cy="154" r="5" fill="#e8e0d0" stroke="#c8b898" stroke-width="1.2"/>
+  <ellipse cx="100" cy="132" rx="42" ry="48" fill="#f0c8a4"/>
+  <path d="M58 128 Q56 74 100 70 Q144 74 142 128 Q140 88 120 82 Q100 78 80 84 Q62 90 58 128Z" fill="#9898a8"/>
+  <path d="M58 128 Q56 76 100 70 Q72 78 62 100 Q57 114 58 128Z" fill="#888898"/>
+  <path d="M142 128 Q144 76 100 70 Q128 78 138 100 Q143 114 142 128Z" fill="#888898"/>
+  <path d="M76 82 Q82 76 88 80 Q82 84 76 82Z" fill="#8888a0"/>
+  <path d="M112 80 Q118 74 126 80 Q120 84 112 80Z" fill="#8888a0"/>
+  <circle cx="84" cy="132" r="17" fill="rgba(200,220,240,.2)" stroke="#9898a8" stroke-width="2"/>
+  <circle cx="116" cy="132" r="17" fill="rgba(200,220,240,.2)" stroke="#9898a8" stroke-width="2"/>
+  <path d="M101 132 L115 132" stroke="#9898a8" stroke-width="2"/>
+  <path d="M67 128 L67 132" stroke="#9898a8" stroke-width="2"/>
+  <path d="M133 128 L133 132" stroke="#9898a8" stroke-width="2"/>
+  <g id="du-brow-n"><path d="M74 120 q12-4 22 0" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M104 120 q12-4 22 0" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g id="du-brow-r" style="display:none"><path d="M76 113 q10-7 20-1" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M104 112 q12-5 20 1" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g id="du-brow-t" style="display:none"><path d="M74 120 q14-1 22 3" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M104 123 q12 0 22-2" stroke="#6a5848" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <ellipse cx="84" cy="132" rx="6" ry="7" fill="#3a2818"/>
+  <ellipse cx="116" cy="132" rx="6" ry="7" fill="#3a2818"/>
+  <ellipse cx="85.5" cy="130" rx="2" ry="2.5" fill="#fff"/>
+  <ellipse cx="117.5" cy="130" rx="2" ry="2.5" fill="#fff"/>
+  <path d="M100 138 q4 9-2 13" stroke="#c89070" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <path class="mouth-closed" d="M88 160 L112 160" stroke="#8a4a48" stroke-width="3.5" stroke-linecap="round"/>
+  <g class="mouth-open" style="display:none"><path d="M88 158 L112 158" stroke="#7a3838" stroke-width="3" stroke-linecap="round"/><ellipse id="du-mouth-ellipse" cx="100" cy="162" rx="9" ry="5" fill="#7a3838"/></g>
+  <path class="mouth-smile" style="display:none" d="M86 157 q14 9 26 0" stroke="#8a4a48" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path class="mouth-think" style="display:none" d="M92 162 q8-2 14 0" stroke="#8a4a48" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M74 195 Q100 204 126 195" stroke="#c8a868" stroke-width="2" fill="none" opacity=".6"/>
+</svg>`;
+
+var SVG_BRUNO = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
+  <path d="M40 320 L40 235 Q40 203 66 192 L134 192 Q160 203 160 235 L160 320 Z" fill="#4a5a2a"/>
+  <path d="M86 192 L100 216 L114 192 L108 188 L100 204 L92 188 Z" fill="#6a7a4a"/>
+  <path d="M40 224 Q62 246 88 252" stroke="#4a5a2a" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <ellipse cx="92" cy="253" rx="11" ry="9" fill="#c89a6a"/>
+  <rect x="82" y="238" width="30" height="24" rx="3" fill="#6a8a5a"/>
+  <line x1="88" y1="241" x2="88" y2="259" stroke="#8aaa78" stroke-width="1.5" opacity=".6"/>
+  <line x1="94" y1="241" x2="94" y2="259" stroke="#8aaa78" stroke-width="1" opacity=".4"/>
+  <path d="M160 224 Q180 232 182 256" stroke="#4a5a2a" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <ellipse cx="182" cy="260" rx="10" ry="8" fill="#c89a6a"/>
+  <rect x="88" y="165" width="24" height="30" rx="10" fill="#c89a6a"/>
+  <ellipse cx="58" cy="140" rx="10" ry="13" fill="#be9060"/>
+  <ellipse cx="142" cy="140" rx="10" ry="13" fill="#be9060"/>
+  <ellipse cx="100" cy="128" rx="44" ry="50" fill="#d8a070"/>
+  <path d="M56 124 Q54 68 100 64 Q146 68 144 124 Q142 88 100 86 Q58 88 56 124Z" fill="#4a4848"/>
+  <path d="M56 124 Q54 70 100 64 Q72 70 62 94 Q56 110 56 124Z" fill="#3a3838"/>
+  <path d="M60 158 Q62 186 78 198 Q100 205 122 198 Q138 186 140 158 Q125 172 100 175 Q75 172 60 158Z" fill="#4a4040"/>
+  <path d="M84 160 Q92 157 100 160 Q108 157 116 160 Q108 167 100 164 Q92 167 84 160Z" fill="#4a4040"/>
+  <path d="M70 116 q16-7 26-1" stroke="#3a3838" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <path d="M104 112 q16-5 26 3" stroke="#3a3838" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="85" cy="128" rx="7" ry="8" fill="#1a2a1a"/>
+  <ellipse cx="115" cy="128" rx="7" ry="8" fill="#1a2a1a"/>
+  <ellipse cx="87" cy="126" rx="2.5" ry="3" fill="#fff"/>
+  <ellipse cx="117" cy="126" rx="2.5" ry="3" fill="#fff"/>
+  <path d="M100 132 q7 14-3 19" stroke="#a87040" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path class="mouth-closed" d="M88 162 q14 9 26-2" stroke="#3a2418" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <g class="mouth-open" style="display:none"><path d="M88 160 q14 8 26-1" stroke="#3a2418" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse id="br-mouth-ellipse" cx="101" cy="163" rx="9" ry="5" fill="#3a2418"/></g>
+  <path class="mouth-smile" style="display:none" d="M84 158 q18 13 32 0" stroke="#3a2418" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>`;
+
+/* ══ ÉTAT GLOBAL ══ */
+var state = {
+  score: 0,
+  trapChosen: null,
+  rep: {posture:0, cadre:0, auth:0, conn:0},
+  results: [],
+  correctStreak: 0,
+  pendingCb: null
+};
+
+/* ══ TTS ENGINE ══ */
+var ttsEnabled = true;
+var currentUtterance = null;
+var frenchVoices = {male:null, female:null, narrator:null};
+
+function pickFrenchVoices(){
+  var voices = window.speechSynthesis.getVoices();
+  var fr = voices.filter(function(v){ return v.lang==='fr-FR' || v.lang.startsWith('fr'); });
+  // Priorité Microsoft Edge (meilleure qualité)
+  var ms = function(name){ return fr.find(function(v){ return v.name.indexOf(name)>-1; }); };
+  frenchVoices.female = ms('Hortense') || ms('Julie') || ms('Female') || fr.find(function(v){return v.name.toLowerCase().indexOf('femme')>-1 || v.name.toLowerCase().indexOf('female')>-1;}) || fr[0];
+  frenchVoices.male   = ms('Paul') || ms('Male') || fr.find(function(v){return v.name.toLowerCase().indexOf('homme')>-1 || v.name.toLowerCase().indexOf('male')>-1;}) || fr[0];
+  frenchVoices.narrator = frenchVoices.male;
+}
+if(window.speechSynthesis){
+  if(window.speechSynthesis.getVoices().length>0) pickFrenchVoices();
+  window.speechSynthesis.onvoiceschanged = pickFrenchVoices;
+}
+
+function speak(text, gender, onEnd){
+  if(!ttsEnabled || !window.speechSynthesis){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  u.rate = 1.15;
+  u.pitch = gender==='female' ? 1.05 : 0.95;
+  var v = gender==='female' ? frenchVoices.female : (gender==='narrator'?frenchVoices.narrator:frenchVoices.male);
+  if(v) u.voice = v;
+  u.onend = function(){ currentUtterance=null; if(onEnd) onEnd(); };
+  u.onerror = function(e){ currentUtterance=null; if(onEnd) onEnd(); };
+  currentUtterance = u;
+  window.speechSynthesis.speak(u);
+}
+
+function stopSpeak(){ if(window.speechSynthesis){ window.speechSynthesis.cancel(); currentUtterance=null; } }
+
+function updateTtsBtn(){
+  var btn = $('btn-tts');
+  if(!btn) return;
+  btn.textContent = ttsEnabled ? '🔊 SON ON' : '🔇 MUET';
+  btn.classList.toggle('muted', !ttsEnabled);
+}
+
+var LETTERS = ['A','B','C'];
+var $ = function(id){ return document.getElementById(id); };
+var scoreVal  = $('score-val');
+var statusLbl = $('status-lbl');
+var izone     = $('izone');
+var fbPanel   = $('feedback-panel');
+var clicker   = $('clicker');
+var clickHint = $('click-hint');
+var voff      = $('voff');
+var voffText  = $('voff-text');
+var cLucas    = $('c-lucas');
+var cDurand   = $('c-durand');
+var cBruno    = $('c-bruno');
+var spotlight = $('spotlight');
+
+function initChars(){
+  cLucas.innerHTML  = SVG_LUCAS;
+  cDurand.innerHTML = SVG_DURAND;
+  cBruno.innerHTML  = SVG_BRUNO;
+  cLucas.style.opacity  = '0';
+  cDurand.style.opacity = '0';
+}
+
+/* ══ TYPEWRITER ══ */
+var typeTimer=null,typeTarget=null,typeFullText='',typeCb=null;
+function typeText(el,text,speed,cb){
+  if(typeTimer){clearTimeout(typeTimer);typeTimer=null;}
+  typeTarget=el;typeFullText=text;typeCb=cb;
+  el.textContent='';var i=0;
+  function tick(){
+    if(i<text.length){el.textContent+=text.charAt(i);i++;typeTimer=setTimeout(tick,speed);}
+    else{typeTimer=null;typeTarget=null;var c=typeCb;typeCb=null;if(c)c();}
+  }
+  tick();
+}
+
+/* ══ BOUCHE ANIMÉE ══ */
+var mouthTimer=null;
+function startMouth(charEl){
+  stopMouth();
+  var closed=charEl.querySelector('.mouth-closed'),open=charEl.querySelector('.mouth-open'),
+      sad=charEl.querySelector('.mouth-sad'),smile=charEl.querySelector('.mouth-smile'),think=charEl.querySelector('.mouth-think');
+  [closed,sad,smile,think].forEach(function(el){if(el)el.style.display='none';});
+  if(open)open.style.display='block';
+  var ellipse=charEl.querySelector('[id$="-mouth-ellipse"]'),ry=3,dir=1;
+  mouthTimer=setInterval(function(){
+    ry+=dir*(0.6+Math.random()*0.4);
+    if(ry>5.5)dir=-1;if(ry<1.5)dir=1;
+    if(ellipse)ellipse.setAttribute('ry',ry.toFixed(1));
+  },80);
+}
+function stopMouth(){
+  if(mouthTimer){clearInterval(mouthTimer);mouthTimer=null;}
+  document.querySelectorAll('.char').forEach(function(ch){
+    var c=ch.querySelector('.mouth-closed'),o=ch.querySelector('.mouth-open');
+    if(c)c.style.display='';if(o)o.style.display='none';
+  });
+}
+
+/* ══ SPOTLIGHT ══ */
+function setSpotlight(side){
+  if(side==='left')spotlight.style.background='linear-gradient(to right,transparent 30%,rgba(26,26,46,.2) 100%)';
+  else if(side==='right')spotlight.style.background='linear-gradient(to left,transparent 30%,rgba(26,26,46,.2) 100%)';
+  else if(side==='center')spotlight.style.background='linear-gradient(to right,rgba(26,26,46,.15) 0%,transparent 40%,transparent 60%,rgba(26,26,46,.15) 100%)';
+  else spotlight.style.background='none';
+}
+
+/* ══ EXPRESSIONS ══ */
+function setExpr(who,expr){
+  var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  if(!el)return;
+  if(who==='LUCAS'){
+    var brows=['lk-brow-n','lk-brow-s','lk-brow-c','lk-brow-t'];
+    var browId=expr==='stressed'?'lk-brow-s':expr==='confident'?'lk-brow-c':expr==='calm'?'lk-brow-t':'lk-brow-n';
+    brows.forEach(function(b){var e=el.querySelector('#'+b);if(e)e.style.display=(b===browId)?'':'none';});
+    var armN=el.querySelector('#lk-arm-n'),armG=el.querySelector('#lk-arm-g'),armR=el.querySelector('#lk-arm-r'),armsO=el.querySelector('#lk-arms-open');
+    [armN,armG,armR,armsO].forEach(function(a){if(a)a.style.display='none';});
+    if(expr==='calm'){if(armsO)armsO.style.display='';}
+    else if(expr==='eager'){if(armG)armG.style.display='';if(armR)armR.style.display='';}
+    else{if(armN)armN.style.display='';if(armR)armR.style.display='';}
+    var mc=el.querySelector('.mouth-closed'),ms=el.querySelector('.mouth-sad'),mok=el.querySelector('.mouth-smile'),mt=el.querySelector('.mouth-think');
+    [mc,ms,mok,mt].forEach(function(m){if(m)m.style.display='none';});
+    var t=expr==='stressed'?ms:expr==='confident'?mok:expr==='calm'?mt:mc;
+    if(t)t.style.display='';
+    var sw=el.querySelector('.sweat');if(sw)sw.style.display=expr==='stressed'?'':'none';
+  }
+  if(who==='DURAND'){
+    var db=['du-brow-n','du-brow-r','du-brow-t'];
+    var dbId=expr==='skeptical'?'du-brow-r':expr==='thinking'||expr==='resistant'?'du-brow-t':'du-brow-n';
+    db.forEach(function(b){var e=el.querySelector('#'+b);if(e)e.style.display=(b===dbId)?'':'none';});
+    var dac=el.querySelector('#du-arms-cross'),dan=el.querySelector('#du-arms-n'),dao=el.querySelector('#du-arms-open');
+    [dac,dan,dao].forEach(function(a){if(a)a.style.display='none';});
+    if(expr==='resistant'||expr==='skeptical'){if(dac)dac.style.display='';}
+    else if(expr==='open'||expr==='thinking'){if(dao)dao.style.display='';}
+    else{if(dan)dan.style.display='';}
+    var dmc=el.querySelector('.mouth-closed'),dms=el.querySelector('.mouth-smile'),dmt=el.querySelector('.mouth-think');
+    [dmc,dms,dmt].forEach(function(m){if(m)m.style.display='none';});
+    var dt=expr==='open'?dms:expr==='thinking'?dmt:dmc;
+    if(dt)dt.style.display='';
+  }
+  if(who==='BRUNO'){
+    if(expr==='in')el.classList.add('in');
+    var bmc=el.querySelector('.mouth-closed'),bms=el.querySelector('.mouth-smile');
+    [bmc,bms].forEach(function(m){if(m)m.style.display='none';});
+    var bt=expr==='teaching'?bms:bmc;if(bt)bt.style.display='';
+  }
+}
+function showChar(who){
+  var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  el.style.opacity='1';if(who==='BRUNO')el.classList.add('in');
+}
+function hideChar(who){
+  var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  el.style.opacity='0';if(who==='BRUNO')el.classList.remove('in');
+}
+
+/* ══ BULLES ══ */
+var SP={
+  LUCAS:{color:'#9a7420',label:'LUCAS',bub:'bl',side:'left'},
+  DURAND:{color:'#8a5a8a',label:'MME DURAND',bub:'br',side:'right'},
+  BRUNO:{color:'#0d7a6e',label:'BRUNO',bub:'bc',side:'center'}
+};
+function hideAllBubbles(){
+  ['bl','br','bc'].forEach(function(id){$(id).classList.remove('show');});
+  voff.classList.remove('show');stopMouth();
+}
+function disableClick(){clicker.classList.remove('on');clickHint.classList.remove('show');}
+function enableClick(){clicker.classList.add('on');clickHint.classList.add('show');}
+
+function showVoff(text,cb){
+  hideAllBubbles();setSpotlight('none');voff.classList.add('show');disableClick();
+  var done = {type:false, speak:false};
+  function check(){ if(done.type && done.speak){ enableClick(); state.pendingCb=cb; } }
+  typeText(voffText,text,18,function(){ done.type=true; check(); });
+  speak(text, 'narrator', function(){ done.speak=true; check(); });
+}
+function showBubble(who,text,cb){
+  hideAllBubbles();
+  var info=SP[who],bub=$(info.bub),charEl=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  bub.querySelector('.b-speaker').textContent=info.label;
+  bub.querySelector('.b-speaker').style.color=info.color;
+  bub.style.setProperty('--bc',info.color);
+  bub.classList.add('show');setSpotlight(info.side);startMouth(charEl);disableClick();
+  var gender = who==='DURAND' ? 'female' : 'male';
+  var done = {type:false, speak:false};
+  function check(){ if(done.type && done.speak){ stopMouth(); enableClick(); state.pendingCb=cb; } }
+  typeText(bub.querySelector('.b-text'),text,18,function(){ done.type=true; check(); });
+  speak(text, gender, function(){ done.speak=true; check(); });
+}
+clicker.addEventListener('click',function(){
+  if(typeTimer&&typeTarget){
+    clearTimeout(typeTimer);typeTimer=null;
+    typeTarget.textContent=typeFullText;typeTarget=null;
+    var c=typeCb;typeCb=null;stopMouth();stopSpeak();enableClick();if(c)c();return;
+  }
+  if(state.pendingCb){var cb=state.pendingCb;state.pendingCb=null;disableClick();stopSpeak();cb();}
+});
+
+/* ══ SCENE RUNNER ══ */
+var sceneSteps=[],sceneIdx=0,sceneCb=null;
+function runScene(steps,cb){sceneSteps=steps;sceneIdx=0;sceneCb=cb;nextStep();}
+function nextStep(){
+  if(sceneIdx>=sceneSteps.length){if(sceneCb)sceneCb();return;}
+  var s=sceneSteps[sceneIdx++];
+  switch(s.type){
+    case 'voff':   showVoff(s.text,nextStep);break;
+    case 'bubble': if(s.expr)setExpr(s.who,s.expr);showBubble(s.who,s.text,nextStep);break;
+    case 'show':   showChar(s.who);if(s.expr)setExpr(s.who,s.expr);nextStep();break;
+    case 'hide':   hideChar(s.who);nextStep();break;
+    case 'expr':   setExpr(s.who,s.expr);nextStep();break;
+    case 'quiz':   showQuiz(s.data,nextStep);break;
+    default:       nextStep();
+  }
+}
+
+/* ══ QCM ENGINE ══ */
+function clearInteraction(){izone.innerHTML='';fbPanel.innerHTML='';fbPanel.classList.remove('show');}
+
+function showQuiz(qData,onDone){
+  clearInteraction();
+  var html='<div class="q-wrap">'
+    +'<div class="q-head">'+(qData.skill?'<span class="q-badge">'+qData.skill+'</span>':'')
+    +'<span class="q-pts">'+qData.pts+' pt'+(qData.pts>1?'s':'')+'</span></div>'
+    +'<div class="q-question">'+qData.q+'</div>'
+    +'<div class="q-options">';
+  qData.opts.forEach(function(o,i){
+    html+='<button class="q-btn" data-idx="'+i+'"><span class="q-letter">'+LETTERS[i]+'</span><span>'+o.t+'</span></button>';
+  });
+  html+='</div></div>';
+  izone.innerHTML=html;
+  statusLbl.textContent=qData.skill||'QUESTION';
+  izone.querySelectorAll('.q-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){handleAnswer(qData,parseInt(btn.getAttribute('data-idx')),onDone);});
+  });
+}
+
+function handleAnswer(qData,chosen,onDone){
+  var isRight=chosen===qData.correct;
+  izone.querySelectorAll('.q-btn').forEach(function(b){
+    b.disabled=true;
+    var i=parseInt(b.getAttribute('data-idx'));
+    if(i===qData.correct)b.classList.add('right');
+    if(i===chosen&&!isRight)b.classList.add('wrong');
+    if(i!==chosen&&i!==qData.correct)b.classList.add('dim');
+  });
+  if(isRight){
+    state.score+=qData.pts;scoreVal.textContent=state.score;ptsPopup(qData.pts);
+    state.correctStreak++;
+    if(state.rep[qData.rep]!==undefined)state.rep[qData.rep]=Math.min(100,(state.rep[qData.rep]||0)+35);
+    state.results.push({skill:qData.skill,pts:qData.pts,max:qData.pts,ok:true,okFirst:true});
+    if(state.correctStreak>=2)showStreakToast(state.correctStreak);
+  } else {
+    state.correctStreak=0;
+    if(state.rep[qData.rep]!==undefined)state.rep[qData.rep]=Math.min(100,(state.rep[qData.rep]||0)+9);
+    state.results.push({skill:qData.skill,pts:0,max:qData.pts,ok:false,okFirst:false,chosen:chosen});
+  }
+  updateRep();showFeedback(qData,chosen,isRight,onDone);
+}
+
+function showFeedback(qData,chosen,isRight,onDone){
+  var html='<div class="pts-line">'+(isRight?'+'+qData.pts+' pt'+(qData.pts>1?'s':''):'+0 pt')+'</div>'
+    +'<div class="fb-card '+(isRight?'good':'bad')+'">'
+    +'<span class="fb-name">'+(isRight?'CORRECT':'INCORRECT')+'</span>'
+    +qData.opts[chosen].fb+'</div>';
+  if(!isRight){
+    if(qData.hint){
+      html+='<div class="hint-label">💡 INDICE DE BRUNO</div>'
+           +'<div class="fb-card hint">'+qData.hint+'</div>';
+    }
+    html+='<div class="retry-opts">';
+    qData.opts.forEach(function(o,i){
+      if(i===chosen)return;
+      html+='<button class="retry-btn" data-ridx="'+i+'"><span class="q-letter">'+LETTERS[i]+'</span><span>'+o.t+'</span></button>';
+    });
+    html+='</div>';
+  }
+  html+='<div class="fb-actions"><button class="btn-go" id="fb-cont">Continuer →</button></div>';
+  fbPanel.innerHTML=html;fbPanel.classList.add('show');
+  $('fb-cont').addEventListener('click',onDone);
+  if(!isRight){
+    fbPanel.querySelectorAll('.retry-btn').forEach(function(rb){
+      rb.addEventListener('click',function(){
+        var ridx=parseInt(rb.getAttribute('data-ridx'));
+        fbPanel.querySelectorAll('.retry-btn').forEach(function(r){r.disabled=true;r.classList.add('wrong');});
+        var hl=fbPanel.querySelector('.hint-label'),hc=fbPanel.querySelector('.fb-card.hint'),ro=fbPanel.querySelector('.retry-opts');
+        if(ridx===qData.correct){
+          rb.classList.remove('wrong');rb.classList.add('right');
+          state.score+=1;scoreVal.textContent=state.score;ptsPopup(1);
+          var last=state.results[state.results.length-1];
+          if(last&&!last.ok){last.pts=1;last.okSecond=true;}
+          var gc=document.createElement('div');gc.className='fb-card good';
+          gc.innerHTML='<span class="fb-name">TROUVÉ AU 2E ESSAI · +1 PT</span>'+qData.opts[ridx].fb;
+          fbPanel.insertBefore(gc,$('fb-cont').parentNode);
+        } else {
+          rb.classList.remove('wrong');
+          fbPanel.querySelectorAll('.retry-btn').forEach(function(r){
+            if(parseInt(r.getAttribute('data-ridx'))===qData.correct){r.classList.remove('wrong');r.classList.add('right');}
+          });
+          var wc=document.createElement('div');wc.className='fb-card bad';
+          wc.innerHTML='<span class="fb-name">RATÉ</span>'+qData.opts[ridx].fb+'<br><br><b>La bonne réponse :</b> '+qData.opts[qData.correct].t;
+          fbPanel.insertBefore(wc,$('fb-cont').parentNode);
+        }
+        if(hl)hl.style.display='none';if(hc)hc.style.display='none';if(ro)ro.style.display='none';
+      });
+    });
+  }
+}
+
+function ptsPopup(pts){
+  var el=document.createElement('div');el.className='pts-pop';el.textContent='+'+pts;
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1700);
+}
+function showStreakToast(n){
+  var msgs={2:'2 bonnes réponses d\'affilée !',3:'3 en série.',4:'4 de suite — Bruno est surpris.',5:'SÉRIE PARFAITE'};
+  var el=document.createElement('div');el.className='streak-toast';el.textContent='🔥 '+(msgs[n]||n+' en série');
+  document.body.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},2300);
+}
+function updateRep(){
+  ['posture','cadre','auth','conn'].forEach(function(k){
+    var v=state.rep[k]||0;
+    var fill=$('rp-'+k),val=$('rv-'+k);
+    if(fill)fill.style.width=v+'%';if(val)val.textContent=v>0?v+'%':'--';
+  });
+}
+function setStep(idx){
+  document.querySelectorAll('.step-item').forEach(function(el,i){
+    el.classList.remove('active','done');
+    if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');
+  });
+}
+
+/* ══ THÉORIE ══ */
+var theoryIdx=0,theoryCb=null;
+var THEORY=[
+  {kicker:'LA RÉACTANCE · 1/4',
+   key:'Pousser, c\'est fermer la porte soi-même.',
+   h:'<p>En 1966, Jack Brehm démontre quelque chose que les commerciaux mettent des années à admettre : <b>plus vous essayez de convaincre quelqu\'un, plus il résiste.</b> Ce n\'est pas de la mauvaise volonté. C\'est un réflexe câblé dans le cerveau.</p><p>Dès que le cerveau du prospect détecte une tentative d\'influence, il active un bouclier. Exactement comme un bras qui se lève sans qu\'on décide de le lever.</p><blockquote>La réactance n\'est pas un choix. C\'est un réflexe. Vous ne pouvez pas la combattre — vous pouvez seulement éviter de la déclencher.</blockquote><p>En 2026, les prospects ont vu défiler des centaines de commerciaux. Leur réactance est <b>activée par défaut</b> avant même que vous ouvriez la bouche.</p>'},
+  {kicker:'L\'ERREUR UNIVERSELLE · 2/4',
+   key:'Répondre à une objection par un argument — c\'est perdre.',
+   h:'<p>La formation commerciale classique enseigne : objection → réfutation → conclusion. Ce modèle marchait quand les prospects faisaient confiance par défaut.</p><div class="dd dont"><span>❌ Ce que fait Lucas en scène 1</span>Mme Durand : C\'est trop cher.<br>Lucas : Je comprends, <b>mais</b> si on calcule sur 25 ans... [Il argumente. Elle se ferme davantage.]</div><p>Le mot <em>mais</em> annule tout ce qui précède. Le cerveau du prospect l\'entend : <em>ce que tu viens de dire est faux.</em></p><div class="dd dont"><span>❌ L\'autre piège classique</span>Mme Durand : Et si les panneaux s\'abîment avant ?<br>Lucas : Ils sont garantis 25 ans. Les études montrent... [Elle avait une émotion. Il sort des chiffres. Deux registres différents — échec garanti.]</div>'},
+  {kicker:'LA MÉTHODE EN 3 TEMPS · 3/4',
+   key:'Clarifier · Faire réfléchir · Déplacer le cadre.',
+   h:'<p>Au lieu de répondre, on fait <b>répondre le prospect</b>. Trois étapes, dans cet ordre :</p><div class="dd do"><span>⏱ Temps 1 — Clarifier</span>« Qu\'est-ce qui vous fait dire que c\'est trop cher ? »<em>But : comprendre la vraie nature de l\'objection. Et signaler : vous n\'êtes pas là pour attaquer.</em></div><div class="dd do"><span>⏱ Temps 2 — Faire réfléchir</span>« Si vous étiez certaine de rester dans cette maison 15 ans — ce serait encore une dépense, ou un choix ? »<em>But : amener le prospect à recadrer la question lui-même. Ce qu\'il dit en réponse est plus puissant que tout ce que vous pourriez dire.</em></div><div class="dd do"><span>⏱ Temps 3 — Déplacer le cadre par une image</span>« C\'est un peu comme planter un verger : les premières années vous arrosez sans récolter, et pendant 20 ans vous récoltez sans arroser. »<em>But : contourner la résistance en activant l\'imagination plutôt que la logique.</em></div><p>Aucun des trois temps ne contredit. Aucun ne déclenche la réactance.</p>'},
+  {kicker:'LE POUVOIR DES IMAGES · 4/4',
+   key:'L\'argument parle au juge. L\'image parle à l\'enfant. L\'enfant décide.',
+   h:'<p>Quand vous argumentez, vous activez le cortex préfrontal : la zone analytique, critique, méfiante. Quand vous utilisez une image concrète, vous activez le système limbique : l\'imagination, les émotions.</p><blockquote>On ne change pas d\'avis avec des faits. On change d\'avis quand on voit les choses autrement.</blockquote><div class="dd do"><span>✓ Structure d\'une bonne image</span>C\'est comme [situation familière] : [mécanisme] — et c\'est exactement ce qui se passe quand [votre contexte].<br><br>Exemple : Hésiter à cause du ROI à 5 ans, c\'est comme refuser de planter un arbre parce qu\'il ne donne pas de fruits demain.</div><p>L\'image ne contredit pas le prospect. Elle <b>déplace</b> son cadre de pensée, sans rien à défendre contre une histoire.</p><p>C\'est ce que Lucas va faire en scène 2. Et Mme Durand va se convaincre toute seule.</p>'}
+];
+
+function showTheory(cb){
+  theoryCb=cb;theoryIdx=0;
+  $('th-char').innerHTML=SVG_BRUNO;setExpr('BRUNO','teaching');
+  clearInteraction();renderTheory();
+  $('theory-overlay').classList.add('on');
+  statusLbl.textContent='THÉORIE';setStep(3);
+}
+function renderTheory(){
+  var t=THEORY[theoryIdx];
+  $('th-kicker').textContent=t.kicker;$('th-title').textContent=t.key;$('th-body').innerHTML=t.h;
+  $('th-prev').style.visibility=theoryIdx>0?'visible':'hidden';
+  var dots='';
+  THEORY.forEach(function(_,i){dots+='<div class="th-dot '+(i<theoryIdx?'done':i===theoryIdx?'cur':'')+'"></div>';});
+  $('th-progress').innerHTML=dots;
+  $('th-next').textContent=theoryIdx<THEORY.length-1?'Suivant →':'C\'est compris, on avance ✓';
+}
+$('th-prev').addEventListener('click',function(){if(theoryIdx>0){theoryIdx--;renderTheory();}});
+$('th-next').addEventListener('click',function(){
+  if(theoryIdx<THEORY.length-1){theoryIdx++;renderTheory();}
+  else{$('theory-overlay').classList.remove('on');if(theoryCb)theoryCb();}
+});
+
+/* ══ QCM DATA — axés sur CE QUE LE COMMERCIAL DOIT FAIRE ══ */
+
+/* Question piège intro — pas de points, juste pour accrocher */
+var TRAP=[
+  "Il réalise que votre offre est objectivement hors de son budget.",
+  "Son cerveau active un mécanisme de résistance automatique — indépendamment du prix.",
+  "Il cherche une sortie polie parce qu'il n'est pas réellement intéressé."
+];
+var REVEALS=[
+  "<p><b>Pas exactement.</b> Si c'était uniquement une question de budget, un tableau comparatif suffirait à convaincre. Des milliers de prospects reçoivent le chiffre parfait — et ne signent pas. Le rationnel n'est pas le problème.</p>",
+  "<p><b>C'est ça.</b> La réactance psychologique — décrite par Brehm en 1966 — est un réflexe câblé. Dès que le cerveau détecte une tentative d'influence, il active un bouclier. Et le paradoxe ? Plus vous argumentez, plus le bouclier se renforce. Lucas va en faire l'expérience.</p>",
+  "<p><b>Rarement.</b> La majorité des « c'est trop cher » sont sincères — le prospect ressent un vrai blocage. Le problème n'est pas dans ce qu'il dit, c'est dans la façon dont vous y répondez. Et la réaction naturelle est presque toujours la mauvaise.</p>"
+];
+
+/* Q1 — scène 1 analyse : qu'aurait dû faire Lucas ? */
+var D1={
+  idx:0,q:"Mme Durand dit : « 18 000 euros, c'est trop cher pour nous. » Lucas répond : « Je comprends, mais si on calcule sur 25 ans… » — Elle se ferme immédiatement. Quelle est l'erreur ?",
+  correct:0,pts:3,skill:'Posture',rep:'posture',
+  hint:"Concentrez-vous sur le mot qui suit « Je comprends ». Il fait tout basculer.",
+  opts:[
+    {t:"Le mot « mais » annule le « Je comprends » — le prospect entend qu'il a tort, et il se braque.", fb:"Exactement. Le « mais » est perçu comme une attaque directe. Peu importe ce qui précède. Lucas pensait empathiser, mais il a déclenché la réactance au moment précis où il croyait la désamorcer."},
+    {t:"Lucas n'a pas suffisamment personnalisé son offre au profil de retraitée de Mme Durand.", fb:"La personnalisation aide, mais ce n'est pas ce qui a provoqué le blocage ici. Un argumentaire parfaitement personnalisé, livré en mode confrontation, déclenche exactement la même résistance. La question, c'est comment vous répondez — pas ce que vous dites."},
+    {t:"Lucas sort les chiffres trop tôt — il aurait dû d'abord créer un lien émotionnel.", fb:"La séquence émotionnelle compte, mais ce n'est pas ce qui a causé le blocage. Le problème n'est pas le timing des chiffres, c'est que Lucas argumente là où il devrait questionner."}
+  ]
+};
+
+/* Q2 — que dire immédiatement après "c'est trop cher" */
+var D2={
+  idx:1,q:"Même situation. Mme Durand vient de dire « c'est trop cher ». Vous avez 3 secondes. Que dites-vous ?",
+  correct:2,pts:3,skill:'Cadre',rep:'cadre',
+  hint:null,
+  opts:[
+    {t:"« Je vous comprends parfaitement — beaucoup de nos clients ont dit la même chose avant de signer. »", fb:"C'est la réponse réflexe de 90 % des commerciaux. Elle déclenche exactement la réactance que vous cherchez à éviter : le prospect entend une tentative de manipulation camouflée en empathie. Et le « beaucoup de nos clients » ne répond pas à son objection — il la noie."},
+    {t:"« Ce qui est sûr, c'est que les aides de l'État ne seront pas là indéfiniment — c'est le bon moment. »", fb:"Vous venez de créer une urgence artificielle sur une personne qui n'a pas demandé à être pressée. Son cerveau l'enregistre comme une pression. La réactance monte d'un cran. Et vous n'avez toujours pas compris pourquoi elle dit « trop cher »."},
+    {t:"« Qu'est-ce qui vous fait dire que c'est trop cher ? »", fb:"C'est la seule réponse qui ne déclenche pas la réactance. Vous ne niez pas, vous ne justifiez pas, vous ne pressez pas. Vous écoutez. Et dans le même temps, le cerveau du prospect enregistre : cette personne n'est pas là pour m'attaquer. Le mur commence à descendre."}
+  ]
+};
+
+/* Q3 — temps 2 de la méthode : question de réflexion */
+var D3={
+  idx:2,q:"Mme Durand répond : « C'est un gros montant d'un coup. Et si on revend la maison dans 8 ans… » Vous êtes au temps 2 de la méthode. Quelle est votre prochaine phrase ?",
+  correct:1,pts:3,skill:'Cadre',rep:'cadre',
+  hint:null,
+  opts:[
+    {t:"« En cas de revente, sachez qu'une maison avec des panneaux se valorise en moyenne 6 à 8 %. »", fb:"Vous êtes retombé dans le mode argumentation. Elle venait d'exprimer une incertitude émotionnelle — « si on revend dans 8 ans » — et vous lui répondez avec un chiffre. Deux registres incompatibles. Le chiffre ne touche pas ce qu'elle ressent."},
+    {t:"« Si vous étiez certaine de rester ici 15 ans — ce serait encore une dépense, ou un choix ? »", fb:"C'est ça. Vous ne répondez pas — vous l'invitez à répondre elle-même. La question l'amène à recadrer mentalement la situation. Ce qu'elle dit après est infiniment plus puissant que tout argument que vous auriez pu avancer."},
+    {t:"« Vous avez raison d'y penser — mais la plupart de nos clients ne revendent pas avant 20 ans. »", fb:"Le « vous avez raison, mais » est un classique du discours commercial — et il ne trompe plus personne. Le prospect entend : je vais maintenant contrer ce que vous venez de dire. La réactance se réactive."}
+  ]
+};
+
+/* Q4 — temps 3 : l'image */
+var D4={
+  idx:3,q:"Mme Durand réfléchit et dit : « Non… si on reste, c'est clairement un choix. Mais c'est l'incertitude sur l'avenir qui me freine. » Vous êtes au temps 3. Que faites-vous ?",
+  correct:0,pts:3,skill:'Connexion',rep:'conn',
+  hint:null,
+  opts:[
+    {t:"Vous utilisez une image concrète : « C'est un peu comme planter un verger : les premières années vous arrosez sans récolter, et ensuite vous récoltez sans arroser. »", fb:"C'est exactement ça. L'image contourne la résistance — il n'y a rien à défendre contre une histoire. Elle ne parle pas à la logique, elle parle à l'imagination. Et Mme Durand commence à se convaincre elle-même."},
+    {t:"Vous rassurez sur la garantie : « Nos panneaux sont garantis 25 ans — le risque technique est couvert. »", fb:"Elle n'a pas exprimé une inquiétude technique. Elle a exprimé une incertitude sur l'avenir en général. Lui répondre avec une garantie, c'est répondre à une question qu'elle n'a pas posée. Et c'est retomber dans l'argumentation."},
+    {t:"Vous proposez de passer à l'étude technique : l'incertitude est levée, il faut avancer.", fb:"Beaucoup trop vite. Elle a ouvert une porte — elle n'a pas signé. Proposer l'étude technique à ce stade, c'est reprendre la main brutalement. La réactance peut se réactiver en un mot. Laissez l'image faire son travail d'abord."}
+  ]
+};
+
+/* Q5 — piège de l'exécution mécanique */
+var D5={
+  idx:4,q:"Lucas applique la méthode en 3 temps — mais mécaniquement, comme un script récité. Mme Durand s'en rend compte et dit : « Vous me posez ces questions parce qu'on vous a dit de les poser, non ? » Que répond Lucas ?",
+  correct:2,pts:3,skill:'Authenticité',rep:'auth',
+  hint:null,
+  opts:[
+    {t:"« Non, pas du tout — je cherche juste à comprendre votre situation. » [Il continue comme si de rien n'était.]", fb:"Il vient de mentir — et Mme Durand le sait. Nier l'évident aggrave la situation. Elle ne lui faisait pas un reproche, elle lui tendait une perche. Il vient de la manquer."},
+    {t:"« Vous avez raison, j'utilise une méthode — mais les résultats sont réels, et je vais vous le montrer. »", fb:"Il reconnaît la méthode, mais il enchaîne sur les résultats. C'est encore une tentative de convaincre. Le problème n'est pas la méthode — c'est le manque d'authenticité dans la façon de la porter. Et il n'a toujours pas répondu à ce qu'elle ressent."},
+    {t:"« Oui. Et je vais être honnête : la méthode ne sert à rien si je ne comprends pas vraiment ce qui vous freine. Alors — qu'est-ce qui se passe, réellement ? »", fb:"C'est la seule réponse qui désamorce. Il ne nie pas, il ne défend pas la méthode. Il revient à l'essentiel : l'écoute sincère. Et la question ouverte « qu'est-ce qui se passe, réellement ? » relance la conversation sur un terrain de confiance."}
+  ]
+};
+
+/* ══ SCÈNES ══ */
+var SCENE1=[
+  {type:'voff',text:"Mardi 14h30. Lucas sonne à la porte d'un pavillon à Saint-Étienne. Mme Durand a 62 ans, retraitée de l'Éducation nationale. Elle a rempli un formulaire de contact il y a trois semaines — le soir où elle a ouvert sa facture EDF. Elle est intéressée. Elle peut signer."},
+  {type:'show',who:'LUCAS',expr:'neutral'},
+  {type:'show',who:'DURAND',expr:'neutral'},
+  {type:'bubble',who:'DURAND',text:'Bonjour. C\'est pour les panneaux solaires ? Entrez, je vous en prie. Mon mari n\'est pas là, mais il est d\'accord pour qu\'on étudie ça.',expr:'neutral'},
+  {type:'bubble',who:'LUCAS',text:'Bonjour Madame Durand, Lucas Ferrand, Alizéo. Merci de me recevoir. Laissez-moi vous montrer ce que ça donne sur votre situation précise.',expr:'eager'},
+  {type:'voff',text:"Lucas sort ses planches, ses tableaux de projection, ses photos de chantiers. Dix minutes de présentation. Mme Durand écoute, les bras croisés sur les genoux."},
+  {type:'quiz',data:{
+    q:"Avant même qu'elle parle, Lucas voit Mme Durand écouter en silence, les bras croisés. Que doit-il faire ?",
+    correct:0,pts:0,skill:'OBSERVATION',rep:'posture',
+    hint:null,
+    opts:[
+      {t:"Marquer une pause, poser une question ouverte — vérifier qu'elle est toujours avec lui.",fb:"Exactement. Le silence d'un prospect pendant une présentation n'est pas un signe d'accord — c'est souvent l'inverse. Une question ouverte simple — « Qu'est-ce qui vous parle le plus, là ? » — remet le prospect au centre."},
+      {t:"Continuer la présentation — elle écoutera mieux si elle voit l'ensemble avant de réagir.",fb:"C'est le réflexe de la majorité des commerciaux. Et c'est ce qui conduit à livrer une présentation parfaite à quelqu'un qui a mentalement décroché au bout de trois minutes. Le silence n'est pas une permission de continuer."},
+      {t:"Accélérer pour arriver au prix — ce qui l'inquiète, c'est toujours l'argent à la fin.",fb:"Anticiper l'objection prix en accélérant vers elle, c'est la garantir. Le prospect n'a pas encore exprimé de réticence — lui projeter d'emblée la question du coût, c'est créer le problème avant qu'il existe."}
+    ]
+  }},
+  {type:'bubble',who:'DURAND',text:'C\'est complet. Mais 18 000 euros, c\'est trop cher pour nous. On est à la retraite.',expr:'skeptical'},
+  {type:'quiz',data:D1},
+  {type:'bubble',who:'LUCAS',text:'Je vous comprends tout à fait, mais si on calcule sur 25 ans — avec les économies d\'énergie et les aides de l\'État — votre retour dépasse les 38 000 euros. C\'est plus du double.',expr:'eager'},
+  {type:'bubble',who:'DURAND',text:'Oui, mais... 25 ans. On ne sait pas ce qui peut arriver. Et si les panneaux s\'abîment avant ?',expr:'resistant'},
+  {type:'quiz',data:{
+    q:"Mme Durand vient de soulever une objection technique : la durabilité des panneaux. Que fait Lucas ?",
+    correct:1,pts:0,skill:'RÉACTION',rep:'cadre',
+    hint:null,
+    opts:[
+      {t:"Il sort immédiatement les données de garantie et les études de vieillissement des panneaux.",fb:"C'est une réponse logique à une question logique. Mais Mme Durand n'a pas posé une question technique — elle a exprimé une peur. Lui répondre avec des données, c'est répondre à la mauvaise chose."},
+      {t:"Il pose d'abord une question : « Qu'est-ce qui vous fait penser qu'ils pourraient s'abîmer ? »",fb:"Exactement. Avant de répondre, il faut comprendre ce qui est derrière l'objection. Est-ce qu'elle a entendu quelque chose de négatif ? Est-ce qu'elle a un voisin avec une mauvaise expérience ? La question de clarification est le seul moyen de savoir — et de ne pas répondre à côté."},
+      {t:"Il pivote sur la valeur de revente : les panneaux augmentent le prix du bien.",fb:"Il évite l'objection au lieu de la traiter. Mme Durand le sait. Elle n'a pas demandé à parler de la valeur de revente — elle a exprimé une inquiétude précise. L'esquive se sent, et elle mine la confiance."}
+    ]
+  }},
+  {type:'bubble',who:'LUCAS',text:'Nos panneaux sont garantis 25 ans. Des études montrent qu\'ils fonctionnent encore à 85 % après 30 ans. Et les aides de l\'État ne vont pas durer éternellement...',expr:'eager'},
+  {type:'expr',who:'LUCAS',expr:'stressed'},
+  {type:'bubble',who:'DURAND',text:'Oui... vous l\'avez dit. Mais non, vraiment, je dois en parler avec mon mari. On vous rappellera.',expr:'resistant'},
+  {type:'voff',text:"Lucas range ses planches. Les chiffres étaient bons. Les garanties étaient là. Et Mme Durand vient de lui sortir la formule la plus douce pour dire non définitivement."},
+  {type:'hide',who:'DURAND'},
+  {type:'voff',text:"Ce que Lucas ne comprend pas encore : chaque fois qu'il a dit « mais », chaque fois qu'il a sorti un chiffre, il a ajouté une brique au mur. Il a gagné le débat. Et perdu la vente."}
+];
+
+var SCENE2=[
+  {type:'voff',text:"Même salon. Même objection. Sauf que cette fois, Bruno a travaillé avec Lucas pendant une heure avant la visite. Lucas sait maintenant ce qu'il ne doit pas faire. Il va voir si ça change quelque chose."},
+  {type:'show',who:'LUCAS',expr:'calm'},
+  {type:'show',who:'DURAND',expr:'neutral'},
+  {type:'bubble',who:'DURAND',text:'18 000 euros... c\'est vraiment trop cher pour nous. On est à la retraite.',expr:'skeptical'},
+  {type:'expr',who:'LUCAS',expr:'calm'},
+  {type:'quiz',data:D2},
+  {type:'bubble',who:'LUCAS',text:'Qu\'est-ce qui vous fait dire que c\'est trop cher ?',expr:'calm'},
+  {type:'voff',text:"Lucas se tait. Il attend. Quatre secondes. Cinq. Le silence fait son travail."},
+  {type:'expr',who:'DURAND',expr:'thinking'},
+  {type:'bubble',who:'DURAND',text:'Bah... c\'est un gros montant d\'un coup. Et on ne sait pas combien de temps on va rester ici. Si on revend dans 8 ans...',expr:'thinking'},
+  {type:'quiz',data:D3},
+  {type:'bubble',who:'LUCAS',text:'Si vous étiez certaine de rester ici 15 ans — ce serait encore une dépense ? Ou un choix ?',expr:'calm'},
+  {type:'voff',text:"Mme Durand ne répond pas immédiatement. Elle regarde vers la fenêtre. Lucas ne remplit pas le silence."},
+  {type:'bubble',who:'DURAND',text:'Non... si on reste, c\'est clairement un choix. Mais c\'est l\'incertitude sur l\'avenir qui me freine.',expr:'thinking'},
+  {type:'quiz',data:D4},
+  {type:'expr',who:'LUCAS',expr:'confident'},
+  {type:'bubble',who:'LUCAS',text:'C\'est un peu comme planter un verger. Les premières années, vous arrosez sans récolter. Et ensuite, pendant 20 ans, vous récoltez sans arroser — même si vous vendez la maison, ce que vous avez planté reste dans les murs.',expr:'confident'},
+  {type:'expr',who:'DURAND',expr:'open'},
+  {type:'bubble',who:'DURAND',text:'Non... quand vous le dites comme ça, ça change la perspective. Et si on revend avant les 25 ans ?',expr:'open'},
+  {type:'bubble',who:'LUCAS',text:'Une maison avec des panneaux se revend en moyenne 6 à 8 % plus cher. Ce que vous plantez là, l\'acheteur suivant vous le paiera.',expr:'confident'},
+  {type:'bubble',who:'DURAND',text:'Alors finalement... ce n\'est pas vraiment un risque ?',expr:'open'},
+  {type:'voff',text:"Lucas n'a pas argumenté une seule fois. Il a posé deux questions, laissé le silence, utilisé une image. Mme Durand vient de se convaincre elle-même."},
+  {type:'quiz',data:D5},
+  {type:'voff',text:"La réactance n'a jamais été activée — parce qu'il n'y avait rien à défendre contre une écoute sincère."}
+];
+
+/* ══ QUESTION PIÈGE (intro) ══ */
+function showTrap(){
+  clearInteraction();
+  statusLbl.textContent='INTRODUCTION';
+  var html='<div class="q-wrap">'
+    +'<div class="q-head"><span class="q-badge">AVANT D\'ENTRER</span><span class="q-pts">Votre intuition</span></div>'
+    +'<div class="q-question">Lucas sonne à la porte. Il sait que Mme Durand a rempli un formulaire — elle est intéressée. Une minute après s\'être assis, elle dit : « 18 000 euros, c\'est trop cher. »<br><br>Dans son cerveau, que se passe-t-il à ce moment précis ?</div>'
+    +'<div class="q-options">';
+  TRAP.forEach(function(t,i){
+    html+='<button class="q-btn" data-idx="'+i+'"><span class="q-letter">'+LETTERS[i]+'</span><span>'+t+'</span></button>';
+  });
+  html+='</div></div>';
+  izone.innerHTML=html;
+  izone.querySelectorAll('.q-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var idx=parseInt(btn.getAttribute('data-idx'));
+      state.trapChosen=idx;
+      izone.querySelectorAll('.q-btn').forEach(function(b){
+        b.disabled=true;
+        var i=parseInt(b.getAttribute('data-idx'));
+        if(i===1)b.classList.add('right');
+        if(i===idx&&idx!==1)b.classList.add('wrong');
+        if(i!==idx&&i!==1)b.classList.add('dim');
+      });
+      showReveal(idx);
+    });
+  });
+}
+
+function showReveal(chosen){
+  clearInteraction();
+  $('rv-choice').textContent='Votre réponse : '+TRAP[chosen];
+  var body=REVEALS[chosen];
+  if(chosen!==1){body+='<div class="rg-row ok" style="margin-top:12px;">'+REVEALS[1]+'</div>';}
+  $('rv-body').innerHTML=body;
+  $('ov-reveal').classList.add('on');setStep(0);
+}
+
+/* ══ BILAN ══ */
+function showBilan(){
+  setStep(6);statusLbl.textContent='BILAN';
+  $('bil-pts').textContent=state.score;
+  var profiles=[
+    {min:13,pTitle:'SDR Instinctif',pDesc:'Vous avez intégré quelque chose que la plupart des commerciaux mettent des années à admettre. La méthode ne doit jamais devenir automatique — c\'est l\'authenticité qui fait la différence.'},
+    {min:9,pTitle:'SDR en Développement',pDesc:'Les bases sont là. La transition entre clarification et question de réflexion reste le point critique — c\'est là que votre progression se jouera.'},
+    {min:5,pTitle:'SDR en Apprentissage',pDesc:'Vous avez saisi certains principes. La méthode en 3 temps n\'est pas encore fluide. Relisez la théorie, repassez le rejeu.'},
+    {min:0,pTitle:'SDR en début de courbe',pDesc:'C\'est normal pour un premier épisode. L\'essentiel : quand un prospect objecte, ne répondez pas — questionnez.'}
+  ];
+  var prof=profiles[profiles.length-1];
+  for(var i=0;i<profiles.length;i++){if(state.score>=profiles[i].min){prof=profiles[i];break;}}
+  var weakSkills=state.results.filter(function(r){return !r.ok;}).map(function(r){return r.skill;});
+  var bilTitle=state.score>=13?'Performance remarquable':state.score>=9?'Bonne maîtrise':state.score>=5?'Des acquis, des zones à consolider':'Les fondations restent à poser';
+  $('bil-title').textContent=bilTitle;
+  $('sdr-profile-title').textContent=prof.pTitle;
+  $('sdr-profile-desc').textContent=prof.pDesc;
+  var repKeys=['posture','cadre','auth','conn'],repLabels={posture:'Posture',cadre:'Cadre',auth:'Authenticité',conn:'Connexion'};
+  var repHtml='';
+  repKeys.forEach(function(k){
+    var v=state.rep[k]||0;
+    repHtml+='<div class="rp-item"><span class="rp-label">'+repLabels[k]+'</span>'
+             +'<div class="rp-track"><div class="rp-fill '+k+'" style="width:'+v+'%"></div></div></div>';
+  });
+  $('rep-profile-bars').innerHTML=repHtml;
+  var rowsHtml='';
+  state.results.forEach(function(r){
+    var cls=r.okFirst?'ok':r.pts>0?'mid':'ko';
+    var verdict=r.okFirst?'Acquis du premier coup':r.pts>0?'Trouvé au 2e essai':'À retravailler';
+    rowsHtml+='<div class="bilan-row '+cls+'"><div class="br-skill">'+r.skill+'</div><div class="br-pts">'+r.pts+'/'+r.max+'</div><div class="br-verdict">'+verdict+'</div></div>';
+  });
+  $('bil-rows').innerHTML=rowsHtml;
+  var memoHtml='<div class="bruno-memo-head">MÉMO DE BRUNO</div>';
+  if(state.score>=13){
+    memoHtml+='<b>Bon. Je retire ce que j\'avais préparé.</b> Je m\'attendais à passer vingt minutes à expliquer pourquoi vous avez répondu comme tout le monde. Apparemment, vous n\'êtes pas tout le monde. Le vrai test : est-ce que ça tient sous pression, avec un prospect qui n\'a aucune intention de vous faciliter la vie ? Ça, on verra.';
+  } else if(state.score>=9){
+    memoHtml+='<b>Pas mal.</b> ';
+    if(weakSkills.length>0){memoHtml+='Vous avez trébuché sur <em>'+weakSkills.join(' et ')+'</em> — ce n\'est pas un hasard, c\'est exactement là que les commerciaux coincent. ';}
+    memoHtml+='Les bases y sont. On monte d\'un cran dans le prochain épisode.';
+  } else {
+    memoHtml+='<b>Honnêtement ?</b> ';
+    if(weakSkills.length>0){memoHtml+='<em>'+weakSkills.join(', ')+'</em> — voilà ce qui reste à travailler. Ce n\'est pas un reproche, c\'est un diagnostic. ';}
+    memoHtml+='Relisez la théorie. Repassez le rejeu. La méthode ne s\'intègre pas en un visionnage.';
+  }
+  memoHtml+='<br><br><b>Les trois temps. Par cœur :</b><br>1. <b>Clarifier</b> — « Qu\'est-ce qui vous fait dire ça ? »<br>2. <b>Réfléchir</b> — « Si [condition favorable], ce serait encore une dépense ou un choix ? »<br>3. <b>Déplacer</b> — « C\'est comme [image concrète]. »<br><br><em>Règle absolue : quand vous sentez l\'envie d\'argumenter — arrêtez. Et posez une question à la place.</em>';
+  $('bruno-memo-text').innerHTML=memoHtml;
+  if(state.score>=15)launchConfetti();
+  $('ov-bilan').classList.add('on');
+}
+
+/* ══ CONFETTI ══ */
+function launchConfetti(){
+  var colors=['#9a7420','#0d7a6e','#2563a8','#c43030','#f0d060'];
+  for(var i=0;i<60;i++){
+    (function(delay){
+      setTimeout(function(){
+        var el=document.createElement('div');el.className='confetti-piece';
+        el.style.left=Math.random()*100+'vw';
+        el.style.background=colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDuration=(2+Math.random()*1.5)+'s';
+        el.style.width=(6+Math.random()*8)+'px';el.style.height=(6+Math.random()*8)+'px';
+        document.body.appendChild(el);
+        setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},3500);
+      },delay);
+    })(i*40);
+  }
+}
+
+/* ══ CLIFFHANGER FINAL — animation score + transition ══ */
+function showFinalWithScore(){
+  $('ov-final').classList.add('on');
+  statusLbl.textContent='FIN';setStep(7);
+  /* Score reveal animé au centre, puis disparaît */
+  var wrap=document.querySelector('.cliff-wrap');
+  var scoreEl=document.createElement('div');
+  scoreEl.className='cliff-score-reveal';
+  scoreEl.innerHTML='<div class="cliff-score-number">'+state.score+'/15</div><div class="cliff-score-sub">SCORE FINAL</div>';
+  wrap.appendChild(scoreEl);
+  /* Après 2.5s : score disparaît, épisode end apparaît */
+  setTimeout(function(){
+    scoreEl.style.animation='cliff-score-in 0.6s ease reverse forwards';
+    setTimeout(function(){
+      if(scoreEl.parentNode)scoreEl.parentNode.removeChild(scoreEl);
+    },600);
+  },2500);
+  /* Toast de fin */
+  setTimeout(function(){
+    var toast=document.createElement('div');
+    toast.className='streak-toast';
+    toast.style.background='var(--teal)';
+    toast.textContent='✓ Épisode 1 — '+state.score+'/15';
+    document.body.appendChild(toast);
+    setTimeout(function(){if(toast.parentNode)toast.parentNode.removeChild(toast);},2800);
+  },800);
+}
+
+/* ══ INTRO CINEMA ══ */
+function startIntro(){
+  $('intro-cinema').classList.remove('hidden');
+  /* Auto-skip après 4s */
+  setTimeout(skipIntro,4200);
+}
+function skipIntro(){
+  var cin=$('intro-cinema');
+  if(cin.classList.contains('hidden'))return;
+  cin.style.transition='opacity 0.6s ease';
+  cin.style.opacity='0';
+  setTimeout(function(){
+    cin.classList.add('hidden');
+    cin.style.opacity='';cin.style.transition='';
+    /* Lance la question piège */
+    showTrap();
+  },600);
+}
+$('btn-skip-intro').addEventListener('click',skipIntro);
+
+/* ══ FLOW PRINCIPAL ══ */
+$('btn-enter-scene').addEventListener('click',function(){
+  $('ov-reveal').classList.remove('on');
+  clearInteraction();hideAllBubbles();disableClick();
+  setStep(1);statusLbl.textContent='SCÈNE 1 — LES ERREURS';
+  runScene(SCENE1,function(){
+    setStep(3);showTheory(function(){
+      $('ov-practice-mid').classList.add('on');
+    });
+  });
+});
+
+$('mode-keyboard-mid').addEventListener('click',function(){
+  $('ov-practice-mid').classList.remove('on');
+  clearInteraction();hideAllBubbles();disableClick();
+  cLucas.style.opacity='0';cDurand.style.opacity='0';
+  setExpr('LUCAS','neutral');
+  statusLbl.textContent='REJEU — LA MÉTHODE';setStep(4);
+  runScene(SCENE2,function(){
+    setStep(6);showBilan();
+  });
+});
+
+$('btn-to-practice-end').addEventListener('click',function(){
+  $('ov-bilan').classList.remove('on');
+  $('ov-practice-end').classList.add('on');setStep(6);
+});
+
+$('mode-keyboard-end').addEventListener('click',function(){
+  $('ov-practice-end').classList.remove('on');
+  showFinalWithScore();
+});
+
+$('cliff-notify').addEventListener('click',function(){
+  this.textContent='✓ Vous serez notifié';
+  this.style.background='var(--gold)';
+  this.disabled=true;
+});
+
+/* ══ INIT ══ */
+initChars();setSpotlight('none');updateRep();setStep(0);updateTtsBtn();
+$('btn-tts').addEventListener('click',function(){
+  ttsEnabled = !ttsEnabled;
+  if(!ttsEnabled) stopSpeak();
+  updateTtsBtn();
+});
+startIntro();
+
+})();
+</script>
+</body>
+</html>
