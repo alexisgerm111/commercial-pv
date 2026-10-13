@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== RESET & VARIABLES ===== */
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --bg:#f0ece4;--bg-mid:#f5f2ec;--bg-panel:#eee9df;--bg-card:#ffffff;
@@ -23,22 +22,16 @@
   --spring:cubic-bezier(.34,1.56,.64,1);--ease:cubic-bezier(.22,1,.36,1);
   --fs-base:16px;--fs-sm:13px;--fs-xs:11px;--fs-xxs:10px;
 }
-
-/* ===== BASE ===== */
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:var(--fs-base);}
 #shell{width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;position:relative;}
 button{font-family:var(--mono);cursor:pointer;}
 button:focus{outline:2px solid var(--teal);outline-offset:2px;}
-
-/* ===== TOOLTIPS ===== */
 [data-tip]{position:relative;}
 [data-tip]:hover::after{
   content:attr(data-tip);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);
   background:#1a1a2e;color:#fff;font-size:var(--fs-xxs);padding:5px 12px;border-radius:4px;
-  white-space:nowrap;z-index:300;pointer-events:none;line-height:1.5;max-width:260px;white-space:normal;text-align:center;
+  z-index:300;pointer-events:none;line-height:1.5;max-width:260px;text-align:center;
 }
-
-/* ===== HUD ===== */
 #hud{height:48px;flex-shrink:0;display:flex;align-items:center;gap:0;background:var(--bg-panel);border-bottom:1px solid var(--border);padding:0 14px;z-index:10;}
 .hud-ep{font-size:var(--fs-xs);letter-spacing:2px;color:var(--txt-l);font-weight:600;text-transform:uppercase;margin-right:auto;}
 .hud-score{font-family:var(--disp);font-size:var(--fs-sm);color:var(--txt-l);letter-spacing:2px;margin-right:14px;}
@@ -51,8 +44,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(13,122,110,.45);}70%{box-shadow:0 0 0 9px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
 #btn-tts{background:transparent;border:1px solid var(--border);color:var(--txt-l);padding:3px 10px;border-radius:12px;font-size:var(--fs-xxs);margin-right:10px;font-family:var(--disp);letter-spacing:1px;transition:all .15s;}
 #btn-tts.muted{color:var(--red);border-color:rgba(196,48,48,.4);background:var(--red-dim);}
-
-/* ===== BARRE DE PROGRESSION ===== */
 #progress-bar{height:34px;flex-shrink:0;display:flex;align-items:center;background:var(--bg);border-bottom:1px solid var(--border);padding:0 14px;overflow:hidden;}
 .step-item{display:flex;align-items:center;gap:0;flex:1;opacity:.3;transition:opacity .4s var(--ease);}
 .step-item.active{opacity:1;}.step-item.done{opacity:.55;}
@@ -62,8 +53,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .step-label{font-size:var(--fs-xxs);letter-spacing:1px;color:var(--txt-xl);margin-left:5px;text-transform:uppercase;white-space:nowrap;transition:color .4s;}
 .step-item.active .step-label{color:var(--gold);}.step-item.done .step-label{color:var(--teal);}
 .step-line{flex:1;height:1px;background:var(--border);margin:0 6px;max-width:36px;}
-
-/* ===== BARRE RÉPUTATION ===== */
 #rep-bar{height:30px;flex-shrink:0;display:flex;align-items:center;background:var(--bg-panel);border-bottom:1px solid var(--border);padding:0 14px;}
 .rep-item{display:flex;align-items:center;gap:6px;flex:1;padding:0 6px;}
 .rep-item:not(:last-child){border-right:1px solid var(--border);}
@@ -73,30 +62,19 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .rep-fill.posture{background:var(--blue);}.rep-fill.cadre{background:var(--gold);}
 .rep-fill.auth{background:var(--teal);}.rep-fill.conn{background:var(--purple);}
 .rep-val{font-family:var(--disp);font-size:10px;color:var(--txt-l);min-width:24px;text-align:right;}
-
-/* ===== SCÈNE ===== */
-#stage{
-  flex:0 0 42%;position:relative;overflow:hidden;background:var(--bg);
-  transition:flex-basis .4s var(--ease);
-}
+#stage{flex:0 0 42%;position:relative;overflow:hidden;background:var(--bg);transition:flex-basis .4s var(--ease);}
 #stage::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(240,236,228,.65));pointer-events:none;z-index:12;}
 #scene-bg{position:absolute;inset:0;width:100%;height:100%;}
 .ts{position:absolute;top:10px;left:12px;font-size:var(--fs-xxs);letter-spacing:2px;color:var(--txt-xl);background:rgba(248,246,242,.9);border:1px solid var(--border);padding:3px 9px;z-index:15;border-radius:var(--r4);}
 #spotlight{position:absolute;inset:0;pointer-events:none;z-index:11;transition:background .5s var(--ease);}
-
-/* ===== PERSONNAGES ===== */
 .char{position:absolute;z-index:20;transition:opacity .5s var(--ease),transform .6s var(--ease),filter .4s var(--ease);}
 .char.dim{filter:brightness(.55);}
 #c-lucas{left:8%;bottom:2%;width:19%;aspect-ratio:200/320;}
 #c-durand{right:8%;bottom:2%;width:19%;aspect-ratio:200/320;}
 #c-bruno{left:50%;bottom:0;width:17%;aspect-ratio:200/320;transform:translateX(-50%) translateY(110px);opacity:0;z-index:30;}
 #c-bruno.in{transform:translateX(-50%) translateY(0);opacity:1;}
-
-/* Positions assises */
 #c-lucas.seated{bottom:20%;transform:scaleY(.78) translateY(18px);transform-origin:bottom center;}
 #c-durand.seated{bottom:20%;transform:scaleY(.78) translateY(18px);transform-origin:bottom center;}
-
-/* ===== BULLES ===== */
 .bubble{position:absolute;z-index:45;display:none;width:30%;max-width:300px;background:rgba(255,255,255,.97);border:1.5px solid var(--bc,#bbb);border-radius:var(--r8);padding:10px 14px;backdrop-filter:blur(6px);box-shadow:0 3px 14px rgba(0,0,0,.07);}
 .bubble.show{display:block;animation:bpop .2s var(--spring);}
 @keyframes bpop{from{transform:scale(.9) translateY(4px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
@@ -105,33 +83,23 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 #bl{left:2%;top:3%;}#br{right:2%;top:3%;}#bc{left:33%;top:2%;}
 #bl::after,#br::after,#bc::after{content:'';position:absolute;bottom:-7px;width:11px;height:11px;background:rgba(255,255,255,.97);border-right:1.5px solid var(--bc,#bbb);border-bottom:1.5px solid var(--bc,#bbb);transform:rotate(45deg);}
 #bl::after{left:22px;}#br::after{right:22px;}#bc::after{left:calc(50% - 5px);}
-
-/* Voix off narrateur */
 #voff{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;width:90%;max-width:860px;background:rgba(248,246,242,.95);border:1px solid var(--border-em);border-left:3px solid var(--txt-l);padding:9px 14px;z-index:48;display:none;border-radius:0 var(--r4) var(--r4) 0;box-shadow:0 2px 12px rgba(0,0,0,.05);}
 #voff.show{display:block;}
 #voff::before{content:'NARRATEUR';display:block;font-family:var(--disp);font-size:9px;letter-spacing:3px;color:var(--txt-xl);margin-bottom:3px;}
 #voff-text{font-size:var(--fs-sm);line-height:1.55;color:var(--txt-m);min-height:26px;}
-
-/* Hint clic */
 #click-hint{position:absolute;right:12px;bottom:10px;z-index:55;display:none;font-size:var(--fs-xxs);letter-spacing:2px;color:var(--txt-l);pointer-events:none;animation:blink 1.8s infinite;background:rgba(248,246,242,.88);padding:3px 9px;border-radius:10px;}
 #click-hint.show{display:block;}
 @keyframes blink{0%,100%{opacity:.15;}50%{opacity:1;}}
 #clicker{position:absolute;inset:0;z-index:50;display:none;cursor:pointer;}
 #clicker.on{display:block;}
-
-/* ===== INTRO CINÉMA ===== */
 #intro-cinema{position:fixed;inset:0;z-index:2000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;transition:opacity .7s ease;}
-#intro-cinema.out{opacity:0;pointer-events:none;}
+#intro-cinema.out{opacity:0;pointer-events:none;visibility:hidden;}
 .cin-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.88) 100%);z-index:4;pointer-events:none;}
-
-/* Son "toudoum" visuel */
 #toudoum-wrap{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;}
 .toudoum-logo{font-family:var(--disp);font-size:4rem;letter-spacing:8px;color:#fff;opacity:0;transform:scale(1.4);transition:opacity .25s,transform .4s var(--ease);}
 .toudoum-logo.show{opacity:1;transform:scale(1);}
 .toudoum-logo.hide{opacity:0;transform:scale(.8);}
 .toudoum-bar{position:absolute;bottom:0;left:0;height:4px;background:var(--red);width:0%;transition:width .3s linear;}
-
-/* Cold open */
 #cold-open{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .5s ease;}
 #cold-open.show{opacity:1;}
 .co-label{font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:6px;color:rgba(255,255,255,.4);margin-bottom:12px;}
@@ -139,8 +107,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .co-text em{color:var(--red);font-style:normal;}
 .co-flashback{font-family:var(--disp);font-size:var(--fs-xs);letter-spacing:6px;color:var(--gold);margin-top:24px;opacity:0;animation:none;}
 .co-flashback.show{animation:cfadein .8s var(--ease) forwards;}
-
-/* Slides d'intro */
 #intro-slides{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;}
 .intro-slide{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:760px;padding:0 40px;opacity:0;pointer-events:none;transition:opacity .6s ease;}
 .intro-slide.active{opacity:1;pointer-events:auto;}
@@ -153,27 +119,22 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .cin-progress-fill{height:100%;background:var(--gold);border-radius:1px;width:0%;transition:width .3s linear;}
 .cin-skip{position:absolute;bottom:20px;right:22px;z-index:20;font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:3px;color:rgba(255,255,255,.3);cursor:pointer;padding:5px 14px;border:1px solid rgba(255,255,255,.12);border-radius:16px;transition:all .2s;}
 .cin-skip:hover{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.3);}
-
 @keyframes cfadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
-/* ===== ÉCRAN PORTE ===== */
 #door-screen{position:fixed;inset:0;z-index:1800;background:#000;display:none;align-items:center;justify-content:center;flex-direction:column;}
 #door-screen.on{display:flex;}
 .door-scene-wrap{position:relative;width:100%;height:100%;}
 #door-bg{position:absolute;inset:0;width:100%;height:100%;}
 #c-lucas-door{position:absolute;right:36%;bottom:0;width:14%;aspect-ratio:200/320;z-index:5;transition:opacity .5s;}
-.doorbell-btn{position:absolute;left:54.5%;top:45%;width:52px;height:52px;border-radius:50%;background:#3a2010;border:3px solid #c8a060;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 0 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);transition:transform .1s,box-shadow .1s;animation:door-pulse 2s ease-in-out infinite;}
+.doorbell-btn{position:absolute;left:54.5%;top:45%;width:60px;height:60px;border-radius:50%;background:#3a2010;border:3px solid #c8a060;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:20;box-shadow:0 0 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);transition:transform .1s,box-shadow .1s;animation:door-pulse 2s ease-in-out infinite;}
 .doorbell-btn:hover{transform:scale(1.08);box-shadow:0 0 28px rgba(200,160,96,.4);}
 .doorbell-btn:active{transform:scale(.94);}
 @keyframes door-pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,160,96,.4),0 0 20px rgba(0,0,0,.5);}50%{box-shadow:0 0 0 10px rgba(200,160,96,0),0 0 20px rgba(0,0,0,.5);}}
 .doorbell-icon{font-size:1.6rem;line-height:1;}
-.doorbell-tip{position:absolute;left:46%;top:37%;background:rgba(0,0,0,.75);color:#fff;font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:2px;padding:5px 14px;border-radius:16px;white-space:nowrap;z-index:11;animation:tip-bounce .8s var(--spring) infinite alternate;}
+.doorbell-tip{position:absolute;left:46%;top:37%;background:rgba(0,0,0,.75);color:#fff;font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:2px;padding:5px 14px;border-radius:16px;white-space:nowrap;z-index:11;animation:tip-bounce .8s var(--spring) infinite alternate;pointer-events:none;}
 @keyframes tip-bounce{from{transform:translateY(0);}to{transform:translateY(-4px);}}
 .door-voff{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);width:85%;max-width:800px;background:rgba(10,10,20,.85);border-left:3px solid var(--gold);padding:10px 16px;border-radius:0 var(--r4) var(--r4) 0;}
 .door-voff::before{content:'NARRATEUR';display:block;font-family:var(--disp);font-size:9px;letter-spacing:3px;color:var(--txt-xl);margin-bottom:3px;}
 #door-voff-text{font-size:var(--fs-sm);color:rgba(255,255,255,.85);line-height:1.55;}
-
-/* ===== OVERLAY THÉORIE ===== */
 #theory-overlay{position:fixed;inset:0;background:rgba(240,236,228,.97);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px);}
 #theory-overlay.on{display:flex;animation:fadein .3s var(--ease);}
 @keyframes fadein{from{opacity:0;}to{opacity:1;}}
@@ -201,8 +162,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .th-progress{display:flex;gap:5px;align-items:center;}
 .th-dot{width:7px;height:7px;border-radius:50%;background:var(--border-em);transition:background .3s;}
 .th-dot.cur{background:var(--teal);}.th-dot.done{background:rgba(13,122,110,.4);}
-
-/* ===== ZONE INTERACTION ===== */
 #interaction{flex:1;background:var(--bg-mid);border-top:1px solid var(--border);overflow:hidden;position:relative;display:flex;flex-direction:column;min-height:0;}
 #izone{padding:14px 20px;flex:1;overflow-y:auto;display:flex;flex-direction:column;min-height:0;}
 .idle-msg{color:var(--txt-xl);font-size:var(--fs-sm);letter-spacing:2px;text-align:center;margin:auto;}
@@ -219,8 +178,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .q-btn.wrong{border-color:var(--red);background:var(--red-dim);color:#8a3a3a;opacity:.6;pointer-events:none;}
 .q-btn.dim{opacity:.22;pointer-events:none;}
 .q-btn:disabled{pointer-events:none;}
-
-/* Feedback panel */
 #feedback-panel{display:none;flex-direction:column;overflow-y:auto;padding:14px 20px;gap:6px;animation:fadein .2s var(--ease);}
 #feedback-panel.show{display:flex;}
 .fb-card{padding:10px 13px;border-left:3px solid #ccc;font-size:var(--fs-sm);line-height:1.52;color:var(--txt-m);border-radius:0 var(--r4) var(--r4) 0;background:var(--bg-card);box-shadow:0 1px 4px rgba(0,0,0,.03);}
@@ -236,20 +193,14 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .retry-btn.right{border-color:var(--teal);background:var(--teal-dim);color:#1a5a50;pointer-events:none;}
 .retry-btn.wrong{border-color:var(--red);background:var(--red-dim);opacity:.5;pointer-events:none;}
 .fb-actions{display:flex;gap:8px;margin-top:8px;flex-shrink:0;}
-
-/* Boutons d'action */
 .btn-go{background:var(--teal);color:#fff;border:none;padding:9px 24px;font-family:var(--disp);font-size:var(--fs-sm);letter-spacing:2px;cursor:pointer;border-radius:var(--r4);text-transform:uppercase;transition:all .15s;}
 .btn-go:hover{background:#0e8e80;transform:translateY(-1px);}
 .btn-go.ghost{background:transparent;color:var(--txt-m);border:1px solid var(--border-em);}
 .btn-go.ghost:hover{border-color:var(--txt-m);}
-
-/* Animations pts & streak */
 .pts-pop{position:fixed;top:38%;right:55px;font-family:var(--disp);font-size:1.7rem;color:var(--teal);letter-spacing:2px;animation:ptspop 1.6s var(--ease) forwards;z-index:2000;pointer-events:none;text-shadow:0 2px 8px rgba(13,122,110,.3);}
 @keyframes ptspop{from{opacity:0;transform:translateY(14px);}15%{opacity:1;}to{opacity:0;transform:translateY(-40px);}}
 .streak-toast{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:var(--gold);color:#fff;padding:6px 20px;border-radius:20px;font-family:var(--disp);font-size:var(--fs-sm);letter-spacing:2px;z-index:2100;animation:streakpop 2.2s var(--ease) forwards;pointer-events:none;box-shadow:0 4px 16px rgba(154,116,32,.35);}
 @keyframes streakpop{0%{opacity:0;transform:translateX(-50%) translateY(-10px);}10%{opacity:1;transform:translateX(-50%) translateY(0);}80%{opacity:1;}100%{opacity:0;transform:translateX(-50%) translateY(-6px);}}
-
-/* ===== OVERLAYS GÉNÉRIQUES ===== */
 .ov{position:fixed;inset:0;background:var(--bg-mid);z-index:500;display:none;overflow-y:auto;padding:20px 28px 36px;}
 .ov.on{display:block;animation:fadein .35s var(--ease);}
 .ov-kicker{font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:3px;color:var(--gold);margin-bottom:4px;}
@@ -259,15 +210,11 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .ov-breadcrumb span{color:var(--gold);}
 .ov-progress-mini{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden;max-width:120px;}
 .ov-progress-fill{height:100%;background:var(--gold);border-radius:1px;transition:width .5s var(--ease);}
-
-/* ===== REVEAL ===== */
 .reveal-choice{border:1px dashed var(--border-em);padding:9px 13px;color:var(--gold-l);font-size:var(--fs-sm);margin-bottom:12px;border-radius:var(--r4);background:var(--gold-dim);}
 .reveal-body p{font-size:var(--fs-sm);line-height:1.6;color:var(--txt-m);margin-bottom:9px;}.reveal-body b{color:var(--txt);}
 .rg-row{padding:8px 12px;border-left:3px solid;margin:6px 0;font-size:var(--fs-sm);line-height:1.5;border-radius:0 var(--r4) var(--r4) 0;}
 .rg-row.ok{border-color:var(--teal);color:#1a5a50;background:var(--teal-dim);}
 .reveal-common{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}.reveal-common p{font-size:var(--fs-sm);line-height:1.6;color:var(--txt-m);}
-
-/* ===== ARENA VOCALE ===== */
 .voice-arena{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:680px;margin:0 auto;}
 .va-prospect-scene{width:100%;display:flex;align-items:flex-end;gap:14px;margin-bottom:14px;background:var(--bg-card);border:1px solid var(--border-em);border-radius:var(--r8);padding:12px 16px;position:relative;overflow:hidden;}
 .va-prospect-char{width:72px;height:90px;flex-shrink:0;position:relative;}
@@ -302,7 +249,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .va-transcript{width:100%;min-height:44px;padding:9px 13px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r8);font-size:var(--fs-sm);line-height:1.5;color:var(--txt);transition:border-color .2s;font-style:italic;}
 .va-transcript.listening{border-color:var(--teal);}
 .va-transcript-placeholder{color:var(--txt-xl);font-style:normal;}
-/* Boutons validation transcription */
 .va-confirm-btns{display:flex;gap:6px;margin-top:5px;display:none;}
 .va-confirm-btns.show{display:flex;}
 .va-confirm-btn{padding:5px 14px;font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:1px;border-radius:var(--r4);cursor:pointer;transition:all .15s;border:1px solid var(--border);}
@@ -328,8 +274,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .va-actions{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;}
 .va-nosupport{width:100%;padding:9px 13px;background:var(--red-dim);border:1px solid rgba(196,48,48,.3);border-radius:var(--r4);font-size:var(--fs-sm);color:#8a3a3a;text-align:center;display:none;margin-top:6px;}
 .va-nosupport.show{display:block;}
-
-/* ===== BILAN ===== */
 .bilan-score{font-family:var(--disp);font-size:3.6rem;color:var(--teal);line-height:1;}
 .bs-max{font-family:var(--disp);font-size:var(--fs-xs);color:var(--txt-l);letter-spacing:3px;display:block;margin-bottom:16px;}
 .sdr-profile{margin:14px 0;padding:14px 18px;border:1px solid var(--border-em);border-radius:var(--r8);background:var(--bg-card);box-shadow:0 2px 10px rgba(0,0,0,.05);}
@@ -353,8 +297,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .bruno-memo{margin:12px 0;padding:14px 18px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r8);font-size:var(--fs-sm);line-height:1.62;color:var(--txt-m);}
 .bruno-memo-head{font-family:var(--disp);font-size:var(--fs-xxs);letter-spacing:3px;color:var(--teal);margin-bottom:6px;}
 .bruno-memo b{color:var(--txt);}.bruno-memo em{color:var(--gold-l);font-style:normal;}
-
-/* ===== CLIFFHANGER FINAL ===== */
 #ov-final{overflow-y:auto;padding:0;}
 .cliff-wrap{position:relative;width:100%;min-height:100vh;background:#060610;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:60px;overflow-y:auto;}
 .cliff-vignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 28%,rgba(0,0,0,.88) 100%);pointer-events:none;z-index:2;}
@@ -390,12 +332,8 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .cliff-tension-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--red),var(--gold));transform:scaleX(0);transform-origin:left;z-index:10;}
 .cliff-tension-bar.grow{animation:tension-grow 3s ease forwards;}
 @keyframes tension-grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
-
-/* ===== CONFETTI ===== */
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;z-index:3000;pointer-events:none;animation:fall 2.5s ease-in forwards;}
 @keyframes fall{from{transform:translateY(-20px) rotate(0);opacity:1;}to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
-
-/* ===== INFOBULLE ONBOARDING ===== */
 .onboard-tip{position:fixed;z-index:3500;background:#1a1a2e;color:#fff;border-radius:var(--r8);padding:10px 16px;font-size:var(--fs-sm);line-height:1.5;max-width:240px;box-shadow:0 8px 32px rgba(0,0,0,.3);pointer-events:none;}
 .onboard-tip::after{content:'';position:absolute;width:10px;height:10px;background:#1a1a2e;transform:rotate(45deg);}
 .onboard-tip.bottom-arrow::after{top:-5px;left:50%;transform:translateX(-50%) rotate(45deg);}
@@ -406,15 +344,9 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 .onboard-tip-btn:hover{color:#fff;}
 .onboard-overlay{position:fixed;inset:0;z-index:3400;background:rgba(0,0,0,.35);backdrop-filter:blur(1px);}
 .onboard-highlight{position:fixed;z-index:3450;border-radius:var(--r4);box-shadow:0 0 0 4px var(--gold),0 0 0 5000px rgba(0,0,0,.35);pointer-events:none;transition:all .4s var(--ease);}
-
-/* ===== TOAST SURPRISE ===== */
 .surprise-toast{position:fixed;top:52px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:7px 22px 7px 14px;border-radius:var(--r4);font-family:var(--disp);font-size:var(--fs-xs);letter-spacing:2px;z-index:3000;pointer-events:none;border-left:3px solid var(--red);opacity:0;transition:opacity .3s var(--ease);white-space:nowrap;}
 .surprise-toast.show{opacity:1;}
-
-/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg-mid);}::-webkit-scrollbar-thumb{background:var(--border-em);border-radius:2px;}
-
-/* ===== RESPONSIVE ===== */
 @media(max-width:640px){
   #stage{flex:0 0 40%;}
   #c-lucas,#c-durand{width:23%;}
@@ -429,8 +361,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 </head>
 <body>
 <div id="shell">
-
-  <!-- HUD -->
   <div id="hud">
     <div class="hud-ep">ALIZÉO · S1·E1 · LA RÉACTANCE</div>
     <div class="hud-score" data-tip="Votre score sur 15 points. Chaque bonne réponse rapporte des points. On peut en récupérer après un 2e essai.">Score <b id="score-val">0</b>/15</div>
@@ -441,35 +371,29 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
     <button id="btn-tts" title="Activer/désactiver la voix">🔊 SON</button>
     <div class="hud-status"><span class="dot"></span><span id="status-lbl">INTRODUCTION</span></div>
   </div>
-
-  <!-- ÉTAPES -->
   <div id="progress-bar">
-    <div class="step-item active" data-step="0" data-tip="Introduction : contexte et cold open"><div class="step-dot"></div><span class="step-label">Intro</span></div>
+    <div class="step-item active" data-step="0"><div class="step-dot"></div><span class="step-label">Intro</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="1" data-tip="Rencontre avec Bruno, votre coach"><div class="step-dot"></div><span class="step-label">Bruno</span></div>
+    <div class="step-item" data-step="1"><div class="step-dot"></div><span class="step-label">Bruno</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="2" data-tip="Scène 1 : les erreurs classiques de Lucas"><div class="step-dot"></div><span class="step-label">Erreurs</span></div>
+    <div class="step-item" data-step="2"><div class="step-dot"></div><span class="step-label">Erreurs</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="3" data-tip="La théorie : réactance et méthode en 3 temps"><div class="step-dot"></div><span class="step-label">Théorie</span></div>
+    <div class="step-item" data-step="3"><div class="step-dot"></div><span class="step-label">Théorie</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="4" data-tip="Pratique orale : à vous de répondre à Mme Durand"><div class="step-dot"></div><span class="step-label">Pratique</span></div>
+    <div class="step-item" data-step="4"><div class="step-dot"></div><span class="step-label">Pratique</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="5" data-tip="Scène 2 : Lucas applique la méthode — vous guidez ses choix"><div class="step-dot"></div><span class="step-label">Rejeu</span></div>
+    <div class="step-item" data-step="5"><div class="step-dot"></div><span class="step-label">Rejeu</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="6" data-tip="Bilan personnalisé de votre session"><div class="step-dot"></div><span class="step-label">Bilan</span></div>
+    <div class="step-item" data-step="6"><div class="step-dot"></div><span class="step-label">Bilan</span></div>
     <div class="step-line"></div>
-    <div class="step-item" data-step="7" data-tip="Fin d'épisode et aperçu de la suite"><div class="step-dot"></div><span class="step-label">Suite</span></div>
+    <div class="step-item" data-step="7"><div class="step-dot"></div><span class="step-label">Suite</span></div>
   </div>
-
-  <!-- RÉPUTATION -->
   <div id="rep-bar">
     <div class="rep-item" data-tip="Posture : rester centré, écouter sans vous défendre. Se construit sur plusieurs épisodes."><span class="rep-label">Posture</span><div class="rep-track"><div class="rep-fill posture" id="rp-posture"></div></div><span class="rep-val" id="rv-posture">--</span></div>
     <div class="rep-item" data-tip="Cadre : maîtrise des 3 temps (clarifier, faire réfléchir, image). Se construit sur plusieurs épisodes."><span class="rep-label">Cadre</span><div class="rep-track"><div class="rep-fill cadre" id="rp-cadre"></div></div><span class="rep-val" id="rv-cadre">--</span></div>
     <div class="rep-item" data-tip="Authenticité : sincérité perçue, non-scriptitude. Se construit sur plusieurs épisodes."><span class="rep-label">Authenticité</span><div class="rep-track"><div class="rep-fill auth" id="rp-auth"></div></div><span class="rep-val" id="rv-auth">--</span></div>
     <div class="rep-item" data-tip="Connexion : lien émotionnel créé avec le prospect. Se construit sur plusieurs épisodes."><span class="rep-label">Connexion</span><div class="rep-track"><div class="rep-fill conn" id="rp-conn"></div></div><span class="rep-val" id="rv-conn">--</span></div>
   </div>
-
-  <!-- SCÈNE -->
   <div id="stage">
     <svg id="scene-bg" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="ts" id="ts-scene">SALON DES DURAND · 15H14</div>
@@ -484,15 +408,12 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
     <div id="click-hint">CLIQUER POUR AVANCER →</div>
     <div id="clicker"></div>
   </div>
-
-  <!-- INTERACTION -->
   <div id="interaction">
     <div id="izone"><div class="idle-msg">— SCÈNE EN COURS —</div></div>
     <div id="feedback-panel"></div>
   </div>
 </div>
 
-<!-- INTRO CINÉMA -->
 <div id="intro-cinema">
   <div class="cin-vignette"></div>
   <div id="toudoum-wrap"><div class="toudoum-logo" id="toudoum-logo">ALIZÉO</div><div class="toudoum-bar" id="toudoum-bar"></div></div>
@@ -528,18 +449,16 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   <div class="cin-skip" id="btn-skip-intro">PASSER →</div>
 </div>
 
-<!-- ÉCRAN PORTE -->
 <div id="door-screen">
   <div class="door-scene-wrap">
     <svg id="door-bg" viewBox="0 0 900 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"></svg>
     <div id="c-lucas-door"></div>
-    <button class="doorbell-btn" id="doorbell-btn" style="display:none;" title="Sonner"><span class="doorbell-icon">🔔</span></button>
+    <button class="doorbell-btn" id="doorbell-btn" title="Sonner" type="button"><span class="doorbell-icon">🔔</span></button>
     <div class="doorbell-tip" id="doorbell-tip" style="display:none;">Sonnez pour commencer</div>
     <div class="door-voff" id="door-voff" style="display:none;"><span id="door-voff-text"></span></div>
   </div>
 </div>
 
-<!-- THEORY OVERLAY -->
 <div id="theory-overlay">
   <div class="th-inner">
     <div class="th-char-wrap">
@@ -559,7 +478,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   </div>
 </div>
 
-<!-- REVEAL -->
 <div class="ov" id="ov-reveal">
   <div class="ov-inner">
     <div class="ov-breadcrumb">INTRO <span>›</span> Analyse de votre intuition <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:12%"></div></div></div>
@@ -576,7 +494,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   </div>
 </div>
 
-<!-- PRATIQUE MID -->
 <div class="ov" id="ov-practice-mid">
   <div class="ov-inner">
     <div class="ov-breadcrumb">THÉORIE <span>›</span> Mise en pratique orale <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:55%"></div></div></div>
@@ -620,7 +537,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   </div>
 </div>
 
-<!-- BILAN -->
 <div class="ov" id="ov-bilan">
   <div class="ov-inner">
     <div class="ov-breadcrumb">QUESTIONS <span>›</span> Bilan <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:84%"></div></div></div>
@@ -635,7 +551,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   </div>
 </div>
 
-<!-- PRATIQUE END -->
 <div class="ov" id="ov-practice-end">
   <div class="ov-inner">
     <div class="ov-breadcrumb">BILAN <span>›</span> Exercice final <div class="ov-progress-mini"><div class="ov-progress-fill" style="width:92%"></div></div></div>
@@ -679,7 +594,6 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
   </div>
 </div>
 
-<!-- FINAL CLIFFHANGER -->
 <div class="ov" id="ov-final">
   <div class="cliff-wrap">
     <div class="cliff-grain"></div>
@@ -705,7 +619,7 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
         </div>
       </div>
       <div class="cliff-actions">
-        <button class="cliff-btn ghost" onclick="location.reload()">↺ Revoir l'épisode</button>
+        <button class="cliff-btn ghost" id="btn-restart">↺ Revoir l'épisode</button>
         <button class="cliff-btn primary" id="cliff-notify">Me notifier →</button>
       </div>
     </div>
@@ -714,11 +628,31 @@ button:focus{outline:2px solid var(--teal);outline-offset:2px;}
 
 <div class="surprise-toast" id="surprise-toast">⚡ À VOUS</div>
 
-</body>
-</html>
 <script>
 (function(){
 "use strict";
+
+/* =====================================================================
+   ⚡ FIX #1 — DÉBLOCAGE AUDIO CONTEXT (cause racine du bug sonnette)
+   ---------------------------------------------------------------------
+   Les navigateurs modernes créent les AudioContext en état "suspended"
+   tant qu'aucun geste utilisateur n'a eu lieu. Résultat : aucun son ne
+   sortait, et sur certains navigateurs cela perturbait les premiers
+   handlers de clic. On force le resume() au premier clic / keydown.
+   ===================================================================== */
+(function unlockAudio(){
+  var unlocked=false;
+  function unlock(){
+    if(unlocked)return;unlocked=true;
+    try{
+      if(!AC){ AC = new (window.AudioContext||window.webkitAudioContext)(); }
+      if(AC && AC.state==='suspended'){ AC.resume(); }
+    }catch(e){}
+  }
+  ['click','keydown','touchstart','pointerdown'].forEach(function(ev){
+    document.addEventListener(ev,unlock,{once:false,passive:true});
+  });
+})();
 
 /* =====================================================================
    SVG PERSONNAGES
@@ -727,201 +661,151 @@ var SVG_LUCAS = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
   <path d="M45 320 L45 235 Q45 205 72 193 L128 193 Q155 205 155 235 L155 320 Z" fill="#2a4a72"/>
   <path d="M88 193 L100 215 L112 193 L106 189 L100 207 L94 189 Z" fill="#4a6a92"/>
   <path d="M86 193 L90 211 L100 203 L110 211 L114 193" fill="#7a9ab8" stroke="#5a7a98" stroke-width="1"/>
-  <!-- Bras normaux -->
   <g id="lk-arm-n">
     <path d="M45 225 Q25 237 23 264" stroke="#2a4a72" stroke-width="19" fill="none" stroke-linecap="round"/>
     <ellipse cx="23" cy="268" rx="11" ry="9" fill="#e0ac7d"/>
     <path d="M155 225 Q175 237 177 264" stroke="#2a4a72" stroke-width="19" fill="none" stroke-linecap="round"/>
     <ellipse cx="177" cy="268" rx="11" ry="9" fill="#e0ac7d"/>
   </g>
-  <!-- Bras geste (main levée) -->
   <g id="lk-arm-g" style="display:none">
     <path d="M45 225 Q22 207 18 178" stroke="#2a4a72" stroke-width="19" fill="none" stroke-linecap="round"/>
     <ellipse cx="18" cy="174" rx="10" ry="9" fill="#e0ac7d"/>
     <path d="M155 225 Q175 237 177 264" stroke="#2a4a72" stroke-width="19" fill="none" stroke-linecap="round"/>
     <ellipse cx="177" cy="268" rx="11" ry="9" fill="#e0ac7d"/>
   </g>
-  <!-- Bras ouverts (calm) -->
   <g id="lk-arms-open" style="display:none">
     <path d="M45 225 Q18 215 14 188" stroke="#2a4a72" stroke-width="17" fill="none" stroke-linecap="round"/>
     <ellipse cx="14" cy="184" rx="10" ry="8" fill="#e0ac7d"/>
     <path d="M155 225 Q182 215 186 188" stroke="#2a4a72" stroke-width="17" fill="none" stroke-linecap="round"/>
     <ellipse cx="186" cy="184" rx="10" ry="8" fill="#e0ac7d"/>
   </g>
-  <!-- Tête & cou -->
   <rect x="88" y="165" width="24" height="32" rx="10" fill="#e0ac7d"/>
   <ellipse cx="62" cy="146" rx="10" ry="13" fill="#d4a070"/>
   <ellipse cx="138" cy="146" rx="10" ry="13" fill="#d4a070"/>
   <ellipse cx="100" cy="134" rx="42" ry="48" fill="#f0bd90"/>
-  <!-- Cheveux -->
   <path d="M58 130 Q56 74 100 68 Q144 74 142 130 Q140 96 122 88 Q110 80 88 84 Q68 90 62 108 Q58 118 58 130Z" fill="#2a1a0e"/>
-  <!-- Sourcils normaux -->
   <g id="lk-brow-n"><path d="M74 120 q14-5 24 0" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M102 120 q14-5 24 0" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
-  <!-- Sourcils stressés -->
   <g id="lk-brow-s" style="display:none"><path d="M76 114 q10-2 18 8" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M106 122 q10-10 18-4" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
-  <!-- Sourcils confiants -->
   <g id="lk-brow-c" style="display:none"><path d="M74 122 h24" stroke="#2a1a0e" stroke-width="3.5" stroke-linecap="round"/><path d="M102 122 h24" stroke="#2a1a0e" stroke-width="3.5" stroke-linecap="round"/></g>
-  <!-- Sourcils calmes -->
   <g id="lk-brow-t" style="display:none"><path d="M74 118 q14-4 22 0" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M104 124 q10 1 22-2" stroke="#2a1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
-  <!-- Yeux -->
   <ellipse cx="84" cy="136" rx="7" ry="8" fill="#1e1818"/>
   <ellipse cx="116" cy="136" rx="7" ry="8" fill="#1e1818"/>
   <ellipse cx="86" cy="134" rx="2.5" ry="3" fill="#fff"/>
   <ellipse cx="118" cy="134" rx="2.5" ry="3" fill="#fff"/>
-  <!-- Nez -->
   <path d="M100 140 q5 11-3 16" stroke="#c08050" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-  <!-- Bouches -->
   <path class="mouth-closed" d="M88 162 q12 4 22 0" stroke="#8a4a34" stroke-width="3.5" fill="none" stroke-linecap="round"/>
   <g class="mouth-open" style="display:none"><path d="M88 160 q12 4 22 0" stroke="#7a3a28" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse id="lk-mouth-e" cx="99" cy="163" rx="8" ry="4" fill="#6a2a1a"/></g>
   <path class="mouth-sad" style="display:none" d="M90 166 q10-6 20 0" stroke="#8a4a34" stroke-width="3" fill="none" stroke-linecap="round"/>
   <path class="mouth-smile" style="display:none" d="M86 158 q14 10 26 0" stroke="#8a4a34" stroke-width="3.5" fill="none" stroke-linecap="round"/>
   <path class="mouth-think" style="display:none" d="M92 162 q8 1 14 0" stroke="#8a4a34" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <!-- Sueur stress -->
   <path class="sweat" style="display:none" d="M148 110 q8 12 0 18 q-8-6 0-18" fill="#7fd4ff"/>
 </svg>`;
 
 var SVG_DURAND = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-  <!-- Corps -->
   <path d="M38 320 L38 235 Q38 202 65 192 L135 192 Q162 202 162 235 L162 320 Z" fill="#8a6a8a"/>
   <path d="M86 192 L100 215 L114 192 Q108 188 100 206 Q92 188 86 192Z" fill="#9a7a9a"/>
-  <!-- Boutons -->
   <circle cx="100" cy="228" r="3" fill="#c8a8c8"/><circle cx="100" cy="250" r="3" fill="#c8a8c8"/>
-  <!-- Bras croisés (défensif) -->
   <g id="du-arms-cross">
     <path d="M38 220 Q60 236 95 226" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/>
     <path d="M162 220 Q140 236 105 226" stroke="#8a6a8a" stroke-width="17" fill="none" stroke-linecap="round"/>
     <ellipse cx="95" cy="226" rx="12" ry="9" fill="#e6bd97"/>
     <ellipse cx="105" cy="226" rx="12" ry="9" fill="#e6bd97"/>
   </g>
-  <!-- Bras neutres -->
   <g id="du-arms-n" style="display:none">
     <path d="M38 220 Q17 230 15 254" stroke="#8a6a8a" stroke-width="16" fill="none" stroke-linecap="round"/>
     <ellipse cx="15" cy="258" rx="10" ry="8" fill="#e6bd97"/>
     <path d="M162 220 Q183 230 185 254" stroke="#8a6a8a" stroke-width="16" fill="none" stroke-linecap="round"/>
     <ellipse cx="185" cy="258" rx="10" ry="8" fill="#e6bd97"/>
   </g>
-  <!-- Bras ouverts (open/thinking) -->
   <g id="du-arms-open" style="display:none">
     <path d="M38 220 Q15 210 13 186" stroke="#8a6a8a" stroke-width="16" fill="none" stroke-linecap="round"/>
     <ellipse cx="13" cy="182" rx="9" ry="8" fill="#e6bd97"/>
     <path d="M162 220 Q185 210 187 186" stroke="#8a6a8a" stroke-width="16" fill="none" stroke-linecap="round"/>
     <ellipse cx="187" cy="182" rx="9" ry="8" fill="#e6bd97"/>
   </g>
-  <!-- Cou -->
   <rect x="88" y="166" width="24" height="30" rx="10" fill="#e6bd97"/>
-  <!-- Oreilles + lunettes -->
   <ellipse cx="60" cy="142" rx="10" ry="12" fill="#dab088"/>
   <ellipse cx="140" cy="142" rx="10" ry="12" fill="#dab088"/>
   <circle cx="60" cy="152" r="5" fill="#e8e0d0" stroke="#c8b898" stroke-width="1.2"/>
   <circle cx="140" cy="152" r="5" fill="#e8e0d0" stroke="#c8b898" stroke-width="1.2"/>
-  <!-- Tête -->
   <ellipse cx="100" cy="130" rx="42" ry="48" fill="#f0c8a4"/>
-  <!-- Cheveux gris -->
   <path d="M58 126 Q56 72 100 68 Q144 72 142 126 Q140 86 120 80 Q100 76 80 82 Q62 88 58 126Z" fill="#9898a8"/>
   <path d="M58 126 Q56 74 100 68 Q72 76 62 98 Q57 112 58 126Z" fill="#888898"/>
   <path d="M142 126 Q144 74 100 68 Q128 76 138 98 Q143 112 142 126Z" fill="#888898"/>
-  <!-- Montures lunettes -->
   <circle cx="84" cy="130" r="17" fill="rgba(200,220,240,.15)" stroke="#9898a8" stroke-width="2.2"/>
   <circle cx="116" cy="130" r="17" fill="rgba(200,220,240,.15)" stroke="#9898a8" stroke-width="2.2"/>
   <path d="M101 130 L115 130" stroke="#9898a8" stroke-width="2.2"/>
   <path d="M67 128 L67 132" stroke="#9898a8" stroke-width="2"/>
   <path d="M133 128 L133 132" stroke="#9898a8" stroke-width="2"/>
-  <!-- Sourcils -->
   <g id="du-brow-n"><path d="M74 118 q12-4 22 0" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M104 118 q12-4 22 0" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>
   <g id="du-brow-r" style="display:none"><path d="M76 111 q10-7 20-1" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M104 110 q12-5 20 1" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>
   <g id="du-brow-t" style="display:none"><path d="M74 118 q14-1 22 3" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M104 121 q12 0 22-2" stroke="#6a5848" stroke-width="2.8" fill="none" stroke-linecap="round"/></g>
-  <!-- Yeux -->
   <ellipse cx="84" cy="130" rx="6" ry="7" fill="#3a2818"/>
   <ellipse cx="116" cy="130" rx="6" ry="7" fill="#3a2818"/>
   <ellipse cx="85.5" cy="128" rx="2" ry="2.5" fill="#fff"/>
   <ellipse cx="117.5" cy="128" rx="2" ry="2.5" fill="#fff"/>
-  <!-- Nez -->
   <path d="M100 136 q4 9-2 13" stroke="#c89070" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <!-- Bouches -->
   <path class="mouth-closed" d="M88 158 L112 158" stroke="#8a4a48" stroke-width="3.2" stroke-linecap="round"/>
   <g class="mouth-open" style="display:none"><path d="M88 156 L112 156" stroke="#7a3838" stroke-width="2.8" stroke-linecap="round"/><ellipse id="du-mouth-e" cx="100" cy="160" rx="9" ry="5" fill="#7a3838"/></g>
   <path class="mouth-smile" style="display:none" d="M86 155 q14 9 26 0" stroke="#8a4a48" stroke-width="3.2" fill="none" stroke-linecap="round"/>
   <path class="mouth-think" style="display:none" d="M92 160 q8-2 14 0" stroke="#8a4a48" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-  <!-- Collier -->
   <path d="M74 192 Q100 202 126 192" stroke="#c8a868" stroke-width="2" fill="none" opacity=".55"/>
 </svg>`;
 
 var SVG_BRUNO = `<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">
-  <!-- Corps -->
   <path d="M40 320 L40 232 Q40 200 66 190 L134 190 Q160 200 160 232 L160 320 Z" fill="#3a4a1a"/>
-  <!-- Veste texturée -->
   <path d="M86 190 L100 213 L114 190 L108 186 L100 202 L92 186 Z" fill="#5a6a3a"/>
-  <!-- Badge/clipboard bras gauche -->
   <path d="M40 222 Q62 244 88 250" stroke="#3a4a1a" stroke-width="20" fill="none" stroke-linecap="round"/>
   <ellipse cx="92" cy="251" rx="11" ry="9" fill="#c89a6a"/>
   <rect x="82" y="236" width="28" height="22" rx="3" fill="#5a7a4a"/>
   <line x1="86" y1="239" x2="86" y2="255" stroke="#8aaa78" stroke-width="1.5" opacity=".6"/>
   <line x1="92" y1="239" x2="92" y2="255" stroke="#8aaa78" stroke-width="1" opacity=".4"/>
-  <!-- Bras droit -->
   <path d="M160 222 Q180 230 182 254" stroke="#3a4a1a" stroke-width="18" fill="none" stroke-linecap="round"/>
   <ellipse cx="182" cy="258" rx="10" ry="8" fill="#c89a6a"/>
-  <!-- Cou -->
   <rect x="88" y="163" width="24" height="30" rx="10" fill="#c89a6a"/>
-  <!-- Oreilles -->
   <ellipse cx="58" cy="138" rx="10" ry="13" fill="#be9060"/>
   <ellipse cx="142" cy="138" rx="10" ry="13" fill="#be9060"/>
-  <!-- Tête -->
   <ellipse cx="100" cy="126" rx="44" ry="50" fill="#d8a070"/>
-  <!-- Barbe / cheveux -->
   <path d="M56 122 Q54 66 100 62 Q146 66 144 122 Q142 86 100 84 Q58 86 56 122Z" fill="#4a4848"/>
   <path d="M56 122 Q54 68 100 62 Q72 68 62 92 Q56 108 56 122Z" fill="#3a3838"/>
-  <!-- Barbe bas -->
   <path d="M60 156 Q62 184 78 196 Q100 203 122 196 Q138 184 140 156 Q125 170 100 173 Q75 170 60 156Z" fill="#3a3838"/>
   <path d="M84 158 Q92 155 100 158 Q108 155 116 158 Q108 165 100 162 Q92 165 84 158Z" fill="#3a3838"/>
-  <!-- Sourcils épais -->
   <path d="M70 114 q16-7 26-1" stroke="#2a2828" stroke-width="5" fill="none" stroke-linecap="round"/>
   <path d="M104 110 q16-5 26 3" stroke="#2a2828" stroke-width="5" fill="none" stroke-linecap="round"/>
-  <!-- Yeux -->
   <ellipse cx="85" cy="126" rx="7" ry="8" fill="#1a2a1a"/>
   <ellipse cx="115" cy="126" rx="7" ry="8" fill="#1a2a1a"/>
   <ellipse cx="87" cy="124" rx="2.5" ry="3" fill="#fff"/>
   <ellipse cx="117" cy="124" rx="2.5" ry="3" fill="#fff"/>
-  <!-- Nez -->
   <path d="M100 130 q7 14-3 19" stroke="#a87040" stroke-width="3.2" fill="none" stroke-linecap="round"/>
-  <!-- Bouches -->
   <path class="mouth-closed" d="M88 160 q14 9 26-2" stroke="#2a1a0a" stroke-width="3.2" fill="none" stroke-linecap="round"/>
   <g class="mouth-open" style="display:none"><path d="M88 158 q14 8 26-1" stroke="#2a1a0a" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse id="br-mouth-e" cx="101" cy="161" rx="9" ry="5" fill="#2a1a0a"/></g>
   <path class="mouth-smile" style="display:none" d="M84 156 q18 13 32 0" stroke="#2a1a0a" stroke-width="3.2" fill="none" stroke-linecap="round"/>
   <path class="mouth-smirk" style="display:none" d="M88 158 q10 7 22 1" stroke="#2a1a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
 </svg>`;
 
-/* =====================================================================
-   FONDS SVG
-   ===================================================================== */
+/* FONDS SVG */
 var SVG_BG_DOOR = `<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#87CEEB"/><stop offset="100%" stop-color="#ddd0b0"/></linearGradient>
     <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c8b090"/><stop offset="100%" stop-color="#b89878"/></linearGradient>
   </defs>
   <rect x="0" y="0" width="900" height="540" fill="url(#sky)"/>
-  <!-- Ciel nuages -->
   <ellipse cx="150" cy="60" rx="70" ry="30" fill="rgba(255,255,255,.7)"/>
   <ellipse cx="120" cy="65" rx="50" ry="22" fill="rgba(255,255,255,.6)"/>
   <ellipse cx="180" cy="65" rx="55" ry="20" fill="rgba(255,255,255,.65)"/>
   <ellipse cx="700" cy="80" rx="90" ry="35" fill="rgba(255,255,255,.6)"/>
   <ellipse cx="660" cy="88" rx="60" ry="25" fill="rgba(255,255,255,.55)"/>
-  <!-- Sol -->
   <rect x="0" y="340" width="900" height="200" fill="#8a7a5a"/>
   <rect x="0" y="340" width="900" height="8" fill="#6a5a3a"/>
-  <!-- Allée -->
   <polygon points="380,348 520,348 480,540 420,540" fill="#9a9080"/>
   <line x1="450" y1="348" x2="450" y2="540" stroke="#8a8070" stroke-width="2" stroke-dasharray="18,14"/>
-  <!-- Gazon -->
   <rect x="0" y="348" width="380" height="192" fill="#5a8a3a"/>
   <rect x="520" y="348" width="380" height="192" fill="#5a8a3a"/>
   <ellipse cx="120" cy="380" rx="60" ry="18" fill="#4a7a2a" opacity=".5"/>
   <ellipse cx="780" cy="390" rx="55" ry="16" fill="#4a7a2a" opacity=".5"/>
-  <!-- Façade maison -->
   <rect x="210" y="100" width="480" height="248" fill="url(#wall)"/>
-  <!-- Toit -->
   <polygon points="190,100 450,20 710,100" fill="#8a5a3a"/>
   <polygon points="195,100 450,24 705,100" fill="#9a6a4a"/>
-  <!-- Fenêtres -->
   <rect x="240" y="150" width="120" height="150" rx="6" fill="#b8d4e8" stroke="#c0a060" stroke-width="3"/>
   <line x1="300" y1="150" x2="300" y2="300" stroke="#c0a060" stroke-width="2.5"/>
   <line x1="240" y1="225" x2="360" y2="225" stroke="#c0a060" stroke-width="2.5"/>
@@ -930,42 +814,32 @@ var SVG_BG_DOOR = `<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg"
   <rect x="540" y="150" width="120" height="150" rx="6" fill="#b8d4e8" stroke="#c0a060" stroke-width="3"/>
   <line x1="600" y1="150" x2="600" y2="300" stroke="#c0a060" stroke-width="2.5"/>
   <line x1="540" y1="225" x2="660" y2="225" stroke="#c0a060" stroke-width="2.5"/>
-  <!-- Porte -->
   <rect x="375" y="185" width="150" height="165" rx="8" fill="#6a3a18"/>
   <rect x="383" y="193" width="132" height="149" rx="6" fill="#7a4828"/>
-  <!-- Panneau de porte -->
   <rect x="393" y="205" width="50" height="65" rx="3" fill="#8a5830" stroke="#5a3010" stroke-width="1"/>
   <rect x="457" y="205" width="50" height="65" rx="3" fill="#8a5830" stroke="#5a3010" stroke-width="1"/>
   <rect x="393" y="278" width="50" height="55" rx="3" fill="#8a5830" stroke="#5a3010" stroke-width="1"/>
   <rect x="457" y="278" width="50" height="55" rx="3" fill="#8a5830" stroke="#5a3010" stroke-width="1"/>
-  <!-- Poignée -->
   <circle cx="512" cy="272" r="8" fill="#4a2a08"/>
   <circle cx="512" cy="272" r="6" fill="#5a3a18"/>
-  <!-- Marche -->
   <rect x="350" y="350" width="200" height="14" rx="3" fill="#b0a080"/>
   <rect x="340" y="360" width="220" height="10" rx="2" fill="#a09070"/>
-  <!-- Végétation -->
   <ellipse cx="218" cy="320" rx="40" ry="48" fill="#3a7a28"/>
   <ellipse cx="200" cy="300" rx="28" ry="34" fill="#4a8a38"/>
   <ellipse cx="236" cy="295" rx="24" ry="30" fill="#2a6a1a"/>
   <ellipse cx="682" cy="320" rx="40" ry="48" fill="#3a7a28"/>
   <ellipse cx="664" cy="300" rx="28" ry="34" fill="#4a8a38"/>
   <ellipse cx="700" cy="295" rx="24" ry="30" fill="#2a6a1a"/>
-  <!-- Sonnette (juste le mur autour - le bouton est en HTML) -->
   <rect x="520" y="246" width="22" height="22" rx="3" fill="#a08060" stroke="#806040" stroke-width="1"/>
-  <!-- Numéro maison -->
   <rect x="434" y="168" width="32" height="16" rx="3" fill="#c8a060"/>
   <text x="450" y="180" text-anchor="middle" font-family="Oswald" font-size="10" fill="#3a2010" font-weight="600">47</text>
 </svg>`;
 
 var SVG_BG_SALON = `<svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-  <!-- Mur -->
   <rect x="0" y="0" width="900" height="540" fill="#f2ece0"/>
   <rect x="0" y="0" width="900" height="315" fill="#ede8d8"/>
-  <!-- Plinthe + sol -->
   <rect x="0" y="313" width="900" height="12" fill="#c8b898"/>
   <rect x="0" y="325" width="900" height="215" fill="#c8a060"/>
-  <!-- Parquet -->
   <g stroke="#b89050" stroke-width=".7" opacity=".38">
     <line x1="0" y1="352" x2="900" y2="352"/><line x1="0" y1="379" x2="900" y2="379"/>
     <line x1="0" y1="406" x2="900" y2="406"/><line x1="0" y1="433" x2="900" y2="433"/>
@@ -975,11 +849,9 @@ var SVG_BG_SALON = `<svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid sli
     <line x1="450" y1="325" x2="450" y2="540"/><line x1="600" y1="325" x2="600" y2="540"/>
     <line x1="750" y1="325" x2="750" y2="540"/>
   </g>
-  <!-- Tapis -->
   <ellipse cx="450" cy="428" rx="275" ry="78" fill="#b09878" opacity=".35"/>
   <ellipse cx="450" cy="428" rx="255" ry="66" fill="none" stroke="#c0a870" stroke-width="2.5" opacity=".5"/>
   <ellipse cx="450" cy="428" rx="235" ry="56" fill="none" stroke="#c0a870" stroke-width="1" opacity=".3"/>
-  <!-- Fenêtre gauche avec lumière -->
   <rect x="38" y="38" width="180" height="245" rx="7" fill="#b8d4e8" stroke="#c0a070" stroke-width="3.5"/>
   <line x1="128" y1="38" x2="128" y2="283" stroke="#c0a070" stroke-width="3"/>
   <line x1="38" y1="160" x2="218" y2="160" stroke="#c0a070" stroke-width="3"/>
@@ -987,47 +859,34 @@ var SVG_BG_SALON = `<svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid sli
   <rect x="136" y="46" width="74" height="106" rx="2" fill="#cce0f2" opacity=".55"/>
   <rect x="46" y="168" width="74" height="107" rx="2" fill="#cce0f2" opacity=".45"/>
   <rect x="136" y="168" width="74" height="107" rx="2" fill="#cce0f2" opacity=".42"/>
-  <!-- Rideaux -->
   <rect x="28" y="28" width="194" height="16" rx="4" fill="#c8b898"/>
   <rect x="28" y="281" width="194" height="11" rx="4" fill="#c8b898"/>
   <path d="M28 28 Q36 158 32 292 L52 292 Q54 158 48 28Z" fill="#ddc8a8" opacity=".75"/>
   <path d="M224 28 Q216 158 220 292 L200 292 Q198 158 204 28Z" fill="#ddc8a8" opacity=".75"/>
-  <!-- Rayon lumière -->
   <polygon points="220,78 420,252 400,272 200,102" fill="#fff9d0" opacity=".1"/>
-  <!-- Canapé 3 places (centre-gauche) -->
   <rect x="200" y="255" width="420" height="100" rx="20" fill="#5a6a7a"/>
-  <!-- Accoudoirs -->
   <rect x="183" y="265" width="40" height="80" rx="15" fill="#4a5a6a"/>
   <rect x="577" y="265" width="40" height="80" rx="15" fill="#4a5a6a"/>
-  <!-- Dossier -->
   <rect x="190" y="244" width="420" height="28" rx="14" fill="#6a8a9a"/>
-  <!-- Coussins -->
   <rect x="215" y="262" width="110" height="72" rx="12" fill="#d8c898" transform="rotate(-1.5 270 298)"/>
   <rect x="345" y="260" width="110" height="72" rx="12" fill="#c8b888" transform="rotate(1 400 296)"/>
   <rect x="473" y="262" width="110" height="72" rx="12" fill="#d8c898" transform="rotate(-1 528 298)"/>
-  <!-- Pieds canapé -->
   <rect x="210" y="354" width="14" height="22" rx="3" fill="#7a5a30"/>
   <rect x="378" y="354" width="14" height="22" rx="3" fill="#7a5a30"/>
   <rect x="556" y="354" width="14" height="22" rx="3" fill="#7a5a30"/>
-  <!-- Table basse -->
   <rect x="252" y="355" width="296" height="12" rx="5" fill="#b08840"/>
   <rect x="256" y="367" width="6" height="32" rx="2" fill="#987830"/>
   <rect x="538" y="367" width="6" height="32" rx="2" fill="#987830"/>
-  <!-- Objets sur table -->
   <ellipse cx="330" cy="361" rx="16" ry="8" fill="#e8e0d0"/>
   <ellipse cx="330" cy="357" rx="14" ry="7" fill="#f5f0e8"/>
-  <!-- Tasse café -->
-  <rect cx="420" cy="355" x="408" y="351" width="22" height="14" rx="3" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <rect x="408" y="351" width="22" height="14" rx="3" fill="#fff" stroke="#ddd" stroke-width="1"/>
   <path d="M430 356 q5 0 5 7 q-5 0 -5-7" fill="none" stroke="#ccc" stroke-width="1.5"/>
-  <!-- Feuilles documents -->
   <rect x="450" y="350" width="62" height="16" rx="2" fill="#eee9df"/>
   <rect x="452" y="352" width="58" height="12" rx="1" fill="#f5f2ea"/>
   <line x1="456" y1="356" x2="504" y2="356" stroke="#ddd" stroke-width=".7"/>
   <line x1="456" y1="359" x2="498" y2="359" stroke="#ddd" stroke-width=".7"/>
-  <!-- Étagère droite -->
   <rect x="690" y="68" width="192" height="14" rx="3" fill="#c0a870"/>
   <rect x="690" y="82" width="192" height="2" rx="1" fill="#a08850"/>
-  <!-- Livres -->
   <rect x="700" y="36" width="20" height="30" rx="2" fill="#2a5a7a"/>
   <rect x="722" y="40" width="16" height="26" rx="2" fill="#8a4a2a"/>
   <rect x="740" y="34" width="22" height="32" rx="2" fill="#4a7a4a"/>
@@ -1037,25 +896,20 @@ var SVG_BG_SALON = `<svg viewBox="0 0 900 540" preserveAspectRatio="xMidYMid sli
   <rect x="818" y="36" width="20" height="30" rx="2" fill="#3a6a8a"/>
   <rect x="840" y="42" width="14" height="24" rx="2" fill="#5a3a7a"/>
   <rect x="856" y="38" width="18" height="28" rx="2" fill="#6a8a3a"/>
-  <!-- Tableau au mur -->
   <rect x="380" y="42" width="140" height="105" rx="5" fill="#e8e0d0" stroke="#c0a878" stroke-width="3.5"/>
   <rect x="390" y="52" width="120" height="85" rx="2" fill="#d0dfd5"/>
-  <!-- Paysage stylisé dans le tableau -->
   <rect x="390" y="52" width="120" height="85" rx="2" fill="#c8d8c0"/>
   <ellipse cx="450" cy="88" rx="28" ry="26" fill="#6a9a60" opacity=".7"/>
   <path d="M418 115 Q432 90 448 95 Q460 85 472 110 Q482 95 490 115Z" fill="#4a7840" opacity=".6"/>
   <rect x="445" y="100" width="8" height="16" rx="2" fill="#6a5030"/>
-  <!-- Plante droite -->
   <rect x="820" y="275" width="30" height="52" rx="5" fill="#c8a060"/>
   <ellipse cx="835" cy="268" rx="38" ry="42" fill="#3a7a28"/>
   <ellipse cx="818" cy="252" rx="24" ry="28" fill="#4a8a38"/>
   <ellipse cx="850" cy="258" rx="22" ry="25" fill="#2a6a18"/>
   <ellipse cx="835" cy="242" rx="20" ry="22" fill="#3a7a28"/>
-  <!-- Applique murale gauche -->
   <rect x="258" y="25" width="8" height="28" rx="2" fill="#c8b898"/>
   <polygon points="262,53 248,78 276,78" fill="#f0e8c0" opacity=".85"/>
   <ellipse cx="262" cy="78" rx="18" ry="8" fill="#f0e8c0" opacity=".7"/>
-  <!-- Applique murale droite -->
   <rect x="632" y="25" width="8" height="28" rx="2" fill="#c8b898"/>
   <polygon points="636,53 622,78 650,78" fill="#f0e8c0" opacity=".85"/>
   <ellipse cx="636" cy="78" rx="18" ry="8" fill="#f0e8c0" opacity=".7"/>
@@ -1072,86 +926,76 @@ var state = {
 };
 
 /* =====================================================================
-   AUDIO ENGINE (Web Audio API)
+   AUDIO
    ===================================================================== */
 var AC = null;
 function ac(){
   if(!AC) try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
+  if(AC && AC.state==='suspended'){ try{AC.resume();}catch(e){} }
   return AC;
 }
 function tone(freq,dur,type,vol,delay){
   var ctx=ac();if(!ctx)return;
-  var osc=ctx.createOscillator();var g=ctx.createGain();
-  osc.type=type||'sine';osc.frequency.value=freq;
-  g.gain.value=vol||0.18;
-  osc.connect(g);g.connect(ctx.destination);
-  var t=ctx.currentTime+(delay||0);
-  osc.start(t);
-  g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-  osc.stop(t+dur+0.05);
+  try{
+    var osc=ctx.createOscillator();var g=ctx.createGain();
+    osc.type=type||'sine';osc.frequency.value=freq;
+    g.gain.value=vol||0.18;
+    osc.connect(g);g.connect(ctx.destination);
+    var t=ctx.currentTime+(delay||0);
+    osc.start(t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+    osc.stop(t+dur+0.05);
+  }catch(e){}
 }
-// Toudoum parodique (3 coups de porte)
 function playToudoum(){
   tone(90,0.08,'sawtooth',0.35,0);
   tone(80,0.08,'sawtooth',0.35,0.12);
   tone(70,0.25,'sawtooth',0.4,0.24);
 }
-// Sonnette d'entrée
 function playSonnerie(){
   tone(1320,0.12,'sine',0.28,0);
   tone(1046,0.12,'sine',0.22,0.18);
   tone(880,0.2,'sine',0.18,0.32);
 }
-// Correct
 function playSuccess(){
   tone(1046,0.1,'sine',0.18,0);
   tone(1318,0.15,'sine',0.18,0.1);
   tone(1568,0.2,'sine',0.16,0.22);
 }
-// Incorrect
 function playFail(){
   tone(380,0.15,'triangle',0.15,0);
   tone(300,0.2,'triangle',0.12,0.15);
 }
-// Pts popup
 function playPts(){ tone(1200,0.08,'sine',0.14); }
-// Ambiance salon (léger fond)
-var ambianceNode=null,ambianceGain=null;
+var ambianceTimer=null,ambianceActive=false;
 function startAmbiance(){
-  var ctx=ac();if(!ctx||ambianceNode)return;
-  ambianceGain=ctx.createGain();ambianceGain.gain.value=0;
-  ambianceGain.connect(ctx.destination);
-  // tic-tac subtil
+  if(ambianceActive)return;ambianceActive=true;
   var tick=function(){
-    if(!ambianceNode)return;
+    if(!ambianceActive)return;
     tone(2800,0.02,'square',0.04);
-    setTimeout(tick,1200+Math.random()*400);
+    ambianceTimer=setTimeout(tick,1200+Math.random()*400);
   };
-  ambianceNode=tick;
-  ambianceGain.gain.linearRampToValueAtTime(0.08,ctx.currentTime+2);
   tick();
 }
-function stopAmbiance(){ ambianceNode=null; }
-// Tension cliffhanger
+function stopAmbiance(){ ambianceActive=false;clearTimeout(ambianceTimer); }
 function playTension(cb){
   var ctx=ac();if(!ctx){if(cb)cb();return;}
   var dur=4;
-  for(var i=0;i<8;i++){
-    tone(40+i*8,dur-i*0.3,'sawtooth',0.08+i*0.015,i*0.35);
-  }
+  for(var i=0;i<8;i++){ tone(40+i*8,dur-i*0.3,'sawtooth',0.08+i*0.015,i*0.35); }
   tone(60,1,'sine',0.2,3.2);
   if(cb)setTimeout(cb,4200);
 }
-// Claque de porte
 function playDoorSlam(){
   var ctx=ac();if(!ctx)return;
-  var buf=ctx.createBuffer(1,ctx.sampleRate*0.3,ctx.sampleRate);
-  var d=buf.getChannelData(0);
-  for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(ctx.sampleRate*0.05));
-  var src=ctx.createBufferSource();src.buffer=buf;
-  var g=ctx.createGain();g.gain.value=0.7;
-  src.connect(g);g.connect(ctx.destination);
-  src.start();
+  try{
+    var buf=ctx.createBuffer(1,ctx.sampleRate*0.3,ctx.sampleRate);
+    var d=buf.getChannelData(0);
+    for(var i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.exp(-i/(ctx.sampleRate*0.05));
+    var src=ctx.createBufferSource();src.buffer=buf;
+    var g=ctx.createGain();g.gain.value=0.7;
+    src.connect(g);g.connect(ctx.destination);
+    src.start();
+  }catch(e){}
 }
 
 /* =====================================================================
@@ -1162,8 +1006,8 @@ function loadVoices(){
   var vs=window.speechSynthesis?window.speechSynthesis.getVoices():[];
   var fr=vs.filter(function(v){return v.lang&&v.lang.startsWith('fr');});
   var find=function(n){return fr.find(function(v){return v.name.indexOf(n)>-1;});};
-  voiceFr.m=find('Paul')||find('Male')||fr[0]||null;
-  voiceFr.f=find('Hortense')||find('Julie')||find('Female')||fr[1]||fr[0]||null;
+  voiceFr.m=find('Paul')||find('Thomas')||find('Male')||fr[0]||null;
+  voiceFr.f=find('Hortense')||find('Julie')||find('Amelie')||find('Female')||fr[1]||fr[0]||null;
 }
 if(window.speechSynthesis){
   if(window.speechSynthesis.getVoices().length>0)loadVoices();
@@ -1172,7 +1016,7 @@ if(window.speechSynthesis){
 var lipTarget=null;
 function speak(text,gender,cb){
   if(!ttsOn||!window.speechSynthesis){if(cb)cb();return;}
-  window.speechSynthesis.cancel();
+  try{ window.speechSynthesis.cancel(); }catch(e){}
   var u=new SpeechSynthesisUtterance(text);
   u.lang='fr-FR';u.rate=1.15;
   u.pitch=gender==='f'?1.06:gender==='narrator'?0.9:0.96;
@@ -1189,9 +1033,9 @@ function speak(text,gender,cb){
   u.onend=function(){curUtt=null;if(cb)cb();};
   u.onerror=function(){curUtt=null;if(cb)cb();};
   curUtt=u;
-  window.speechSynthesis.speak(u);
+  try{ window.speechSynthesis.speak(u); }catch(e){ if(cb)cb(); }
 }
-function stopSpeak(){if(window.speechSynthesis)window.speechSynthesis.cancel();curUtt=null;}
+function stopSpeak(){if(window.speechSynthesis){try{window.speechSynthesis.cancel();}catch(e){}}curUtt=null;}
 
 /* =====================================================================
    HELPERS
@@ -1229,49 +1073,45 @@ function updateRep(){
 }
 
 /* =====================================================================
-   PERSONNAGES & SCÈNE
+   PERSONNAGES
    ===================================================================== */
-var cLucas=$('c-lucas'),cDurand=$('c-durand'),cBruno=$('c-bruno');
-var spotlight=$('spotlight');
+var cLucas,cDurand,cBruno,spotlight;
 function initChars(){
+  cLucas=$('c-lucas');cDurand=$('c-durand');cBruno=$('c-bruno');spotlight=$('spotlight');
   cLucas.innerHTML=SVG_LUCAS;cDurand.innerHTML=SVG_DURAND;cBruno.innerHTML=SVG_BRUNO;
   $('c-lucas-door').innerHTML=SVG_LUCAS;
 }
 function showChar(who){
   var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  if(!el)return;
   el.style.opacity='1';
   if(who==='BRUNO')el.classList.add('in');
   if(who==='LUCAS'||who==='DURAND')el.classList.remove('dim');
 }
 function hideChar(who){
   var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
+  if(!el)return;
   el.style.opacity='0';
   if(who==='BRUNO')el.classList.remove('in');
 }
 function dimChar(who,on){
   var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
-  el.classList.toggle('dim',on);
+  if(el)el.classList.toggle('dim',on);
 }
-function seatChars(){
-  cLucas.classList.add('seated');cDurand.classList.add('seated');
-}
-function standChars(){
-  cLucas.classList.remove('seated');cDurand.classList.remove('seated');
-}
+function seatChars(){if(cLucas)cLucas.classList.add('seated');if(cDurand)cDurand.classList.add('seated');}
+function standChars(){if(cLucas)cLucas.classList.remove('seated');if(cDurand)cDurand.classList.remove('seated');}
 function setSceneBg(svgContent){
   var el=$('scene-bg');
   if(!el)return;
-  el.innerHTML=svgContent;
+  el.innerHTML=svgContent||'';
 }
 function setSpotlight(side){
-  var s=spotlight;
+  var s=spotlight;if(!s)return;
   if(side==='left')s.style.background='linear-gradient(to right,transparent 28%,rgba(26,26,46,.18) 100%)';
   else if(side==='right')s.style.background='linear-gradient(to left,transparent 28%,rgba(26,26,46,.18) 100%)';
   else if(side==='center')s.style.background='radial-gradient(ellipse at center,transparent 35%,rgba(26,26,46,.15) 100%)';
   else s.style.background='none';
 }
-
-/* ===== EXPRESSIONS ===== */
 function setExpr(who,expr){
   var el=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
   if(!el||!el.querySelector)return;
@@ -1282,9 +1122,10 @@ function setExpr(who,expr){
     });
     var aMap={neutral:'n',stressed:'n',confident:'n',eager:'g',calm:'o'};
     var armGroup=aMap[expr||'neutral']||'n';
-    el.querySelector('#lk-arm-n')&&(el.querySelector('#lk-arm-n').style.display=armGroup==='n'?'':'none');
-    el.querySelector('#lk-arm-g')&&(el.querySelector('#lk-arm-g').style.display=armGroup==='g'?'':'none');
-    el.querySelector('#lk-arms-open')&&(el.querySelector('#lk-arms-open').style.display=armGroup==='o'?'':'none');
+    var an=el.querySelector('#lk-arm-n'),ag=el.querySelector('#lk-arm-g'),ao=el.querySelector('#lk-arms-open');
+    if(an)an.style.display=armGroup==='n'?'':'none';
+    if(ag)ag.style.display=armGroup==='g'?'':'none';
+    if(ao)ao.style.display=armGroup==='o'?'':'none';
     var mMap={neutral:'closed',stressed:'sad',confident:'smile',calm:'think',eager:'closed'};
     ['closed','open','sad','smile','think'].forEach(function(m){
       el.querySelectorAll('.mouth-'+m).forEach(function(e){e.style.display=(m===mMap[expr||'neutral'])?'':'none';});
@@ -1298,9 +1139,10 @@ function setExpr(who,expr){
     });
     var dAmap={neutral:'n',skeptical:'cross',resistant:'cross',thinking:'open',open:'open'};
     var da=dAmap[expr||'neutral'];
-    el.querySelector('#du-arms-cross')&&(el.querySelector('#du-arms-cross').style.display=da==='cross'?'':'none');
-    el.querySelector('#du-arms-n')&&(el.querySelector('#du-arms-n').style.display=da==='n'?'':'none');
-    el.querySelector('#du-arms-open')&&(el.querySelector('#du-arms-open').style.display=da==='open'?'':'none');
+    var dc=el.querySelector('#du-arms-cross'),dn=el.querySelector('#du-arms-n'),doo=el.querySelector('#du-arms-open');
+    if(dc)dc.style.display=da==='cross'?'':'none';
+    if(dn)dn.style.display=da==='n'?'':'none';
+    if(doo)doo.style.display=da==='open'?'':'none';
     var dMmap={neutral:'closed',skeptical:'closed',resistant:'closed',thinking:'think',open:'smile'};
     ['closed','open','smile','think'].forEach(function(m){
       el.querySelectorAll('.mouth-'+m).forEach(function(e){e.style.display=(m===dMmap[expr||'neutral'])?'':'none';});
@@ -1313,8 +1155,6 @@ function setExpr(who,expr){
     });
   }
 }
-
-/* ===== LIPSYNC ===== */
 var mouthTimer=null;
 function startMouth(charEl){
   stopMouth();
@@ -1339,7 +1179,7 @@ function stopMouth(){
 }
 
 /* =====================================================================
-   BULLES & VOIX OFF
+   BULLES
    ===================================================================== */
 var SP={
   LUCAS:{color:'#9a7420',label:'LUCAS',bub:'bl',side:'left',gender:'m'},
@@ -1347,14 +1187,12 @@ var SP={
   BRUNO:{color:'#0d7a6e',label:'BRUNO',bub:'bc',side:'center',gender:'m'}
 };
 function hideAllBubbles(){
-  ['bl','br','bc'].forEach(function(id){$(id).classList.remove('show');});
-  $('voff').classList.remove('show');
+  ['bl','br','bc'].forEach(function(id){var e=$(id);if(e)e.classList.remove('show');});
+  var v=$('voff');if(v)v.classList.remove('show');
   stopMouth();
 }
 function disableClick(){$('clicker').classList.remove('on');$('click-hint').classList.remove('show');}
 function enableClick(){$('clicker').classList.add('on');$('click-hint').classList.add('show');}
-
-/* ===== TYPEWRITER ===== */
 var twTimer=null,twTarget=null,twFull='',twCb=null;
 function typeText(el,text,spd,cb){
   clearTimeout(twTimer);twTarget=el;twFull=text;twCb=cb;
@@ -1374,8 +1212,6 @@ function flushTypewriter(){
   }
   return false;
 }
-
-/* ===== CLIC AVANCE (IMMEDIATE) ===== */
 $('clicker').addEventListener('click',function(){
   if(flushTypewriter())return;
   if(state.pendingCb){
@@ -1384,8 +1220,6 @@ $('clicker').addEventListener('click',function(){
     cb();
   }
 });
-
-/* ===== SHOW BUBBLE ===== */
 function showBubble(who,text,cb){
   hideAllBubbles();
   var info=SP[who],bub=$(info.bub),charEl=who==='LUCAS'?cLucas:who==='DURAND'?cDurand:cBruno;
@@ -1403,8 +1237,6 @@ function showBubble(who,text,cb){
   typeText(bub.querySelector('.b-text'),text,16,function(){done.tw=true;check();});
   speak(text,info.gender,function(){done.sp=true;check();});
 }
-
-/* ===== SHOW VOFF ===== */
 function showVoff(text,cb){
   hideAllBubbles();setSpotlight('none');dimChar('LUCAS',false);dimChar('DURAND',false);
   $('voff').classList.add('show');
@@ -1421,14 +1253,13 @@ function showVoff(text,cb){
 var sceneQ=[],sceneI=0,sceneFn=null;
 function runScene(steps,cb){sceneQ=steps;sceneI=0;sceneFn=cb;nextStep();}
 function nextStep(){
-  if(sceneI>=sceneQ.length){if(sceneFn)sceneFn();return;}
+  if(sceneI>=sceneQ.length){if(sceneFn){var f=sceneFn;sceneFn=null;f();}return;}
   var s=sceneQ[sceneI++];
   switch(s.type){
     case 'voff':  showVoff(s.text,nextStep); break;
     case 'bubble':
       if(s.expr)setExpr(s.who,s.expr);
-      // effacer feedback si présent
-      $('feedback-panel').classList.remove('show');$('feedback-panel').innerHTML='';
+      var fp=$('feedback-panel');if(fp){fp.classList.remove('show');fp.innerHTML='';}
       $('izone').innerHTML='<div class="idle-msg">— DIALOGUE EN COURS —</div>';
       showBubble(s.who,s.text,nextStep); break;
     case 'show':  showChar(s.who);if(s.expr)setExpr(s.who,s.expr);nextStep(); break;
@@ -1454,7 +1285,7 @@ function showQuiz(qd,onDone){
   setStatus(qd.skill||'QUESTION');
   var html='<div class="q-wrap">'
     +'<div class="q-head">'+(qd.skill?'<span class="q-badge">'+qd.skill+'</span>':'')
-    +'<span class="q-pts" data-tip="Points attribués si bonne réponse">'+qd.pts+' pt'+(qd.pts>1?'s':'')+'</span></div>'
+    +'<span class="q-pts">'+qd.pts+' pt'+(qd.pts>1?'s':'')+'</span></div>'
     +'<div class="q-question">'+qd.q+'</div>'
     +'<div class="q-options">';
   qd.opts.forEach(function(o,i){
@@ -1489,7 +1320,6 @@ function handleAnswer(qd,chosen,onDone){
 }
 function showFeedback(qd,chosen,ok,onDone){
   var fbP=$('feedback-panel');
-  // Ton Bruno : sarcastique-bienveillant
   var html='<div class="pts-line">'+(ok?'✓ +'+qd.pts+' pt'+(qd.pts>1?'s':''):'✗ +0 pt')+'</div>';
   html+='<div class="fb-card '+(ok?'good':'bad')+'">'
        +'<span class="fb-name">'+(ok?'JUSTE.':'RATÉ.')+'</span>'
@@ -1499,7 +1329,6 @@ function showFeedback(qd,chosen,ok,onDone){
       html+='<div class="hint-label">💡 BRUNO</div>'
            +'<div class="fb-card hint">'+qd.hint+'</div>';
     }
-    // 2e essai
     html+='<div class="hint-label">DEUXIÈME CHANCE</div><div class="retry-opts">';
     qd.opts.forEach(function(o,i){
       if(i!==chosen){
@@ -1523,13 +1352,15 @@ function showFeedback(qd,chosen,ok,onDone){
         var last=state.results[state.results.length-1];
         if(ri===qd.correct){
           rb.classList.remove('wrong');rb.classList.add('right');
+          // FIX #2 — le retry rapporte désormais la même valeur que la question (plafonné)
           if(state.lostPoints>0){
-            state.score=Math.min(state.maxScore,state.score+1);
-            state.lostPoints--;score$();ptsPopup(1);playSuccess();
-            if(last)last.pts=1;
+            var recover=Math.min(qd.pts,state.lostPoints);
+            state.score=Math.min(state.maxScore,state.score+recover);
+            state.lostPoints-=recover;score$();ptsPopup(recover);playSuccess();
+            if(last)last.pts=recover;
           }
           var gc=document.createElement('div');gc.className='fb-card good';
-          gc.innerHTML='<span class="fb-name">TROUVÉ — +1 PT.</span>'
+          gc.innerHTML='<span class="fb-name">TROUVÉ — +'+qd.pts+' PT.</span>'
             +'La première fois, on rate. La deuxième fois, on sait. C\'est ça, apprendre.';
           $('fb-cont').parentNode.insertBefore(gc,$('fb-cont').parentNode.firstChild);
         } else {
@@ -1541,16 +1372,16 @@ function showFeedback(qd,chosen,ok,onDone){
           });
           $('fb-cont').parentNode.insertBefore(bc,$('fb-cont').parentNode.firstChild);
         }
-        fbP.querySelector('.hint-label')&&(fbP.querySelector('.hint-label').style.display='none');
-        fbP.querySelector('.fb-card.hint')&&(fbP.querySelector('.fb-card.hint').style.display='none');
-        fbP.querySelector('.retry-opts')&&(fbP.querySelector('.retry-opts').style.display='none');
+        var hl=fbP.querySelector('.hint-label');if(hl)hl.style.display='none';
+        var hc=fbP.querySelector('.fb-card.hint');if(hc)hc.style.display='none';
+        var ro=fbP.querySelector('.retry-opts');if(ro)ro.style.display='none';
       });
     });
   }
 }
 
 /* =====================================================================
-   DONNÉES QCM (ton Bruno sarcastique-bienveillant)
+   DONNÉES QCM
    ===================================================================== */
 var TRAP_OPTS=[
   "Il réalise objectivement que l'offre dépasse son budget.",
@@ -1562,7 +1393,6 @@ var REVEALS=[
   "<p><b>C'est ça.</b> Jack Brehm, 1966 : dès que le cerveau détecte une tentative d'influence, il active un bouclier. La <em>réactance</em>. Le paradoxe ? Plus vous argumentez, plus le bouclier se renforce. Lucas va en faire l'expérience. En direct.</p>",
   "<p><b>Rarement.</b> La majorité des « c'est trop cher » sont sincères — le prospect ressent un vrai blocage. Le problème n'est pas ce qu'il dit, c'est comment vous y répondez. Et la réaction naturelle — argumenter — est presque toujours la mauvaise.</p>"
 ];
-
 var D1={q:"Lucas dit : « Je comprends, <b>mais</b> si on calcule sur 25 ans… » Mme Durand se ferme immédiatement. Trois lettres ont tout fait basculer. Lesquelles ?",correct:0,pts:3,skill:'Posture',rep:'posture',
   hint:"Relisez la réplique de Lucas mot par mot. Il y a un mot qui annule tout ce qui précède — un seul.",
   opts:[
@@ -1573,7 +1403,6 @@ var D1={q:"Lucas dit : « Je comprends, <b>mais</b> si on calcule sur 25 ans… 
     {t:"Il est arrivé trop vite au chiffre de 25 ans — pas assez de lien émotionnel avant.",
      fb:"La séquence compte, oui. Mais le problème ici, c'est un mot — pas un timing. Même avec le lien émotionnel parfait, le « mais » aurait cassé tout le reste."}
   ]};
-
 var D2={q:"Mme Durand vient de dire « c'est trop cher ». Vous avez 3 secondes. Qu'est-ce qui sort de votre bouche ?",correct:2,pts:3,skill:'Cadre',rep:'cadre',
   hint:"Parmi ces trois options, une seule ne déclenche pas la réactance. Elle n'argumente pas, ne justifie pas, ne presse pas.",
   opts:[
@@ -1584,7 +1413,6 @@ var D2={q:"Mme Durand vient de dire « c'est trop cher ». Vous avez 3 secondes.
     {t:"« Qu'est-ce qui vous fait dire que c'est trop cher ? »",
      fb:"La seule réponse qui ne déclenche rien. Vous ne niez pas, vous ne justifiez pas, vous ne pressez pas. Vous écoutez. Et dans le même temps, le cerveau de Mme Durand enregistre : <em>cette personne n'est pas là pour m'attaquer.</em> Le mur commence à descendre."}
   ]};
-
 var D3={q:"Mme Durand dit : « C'est un gros montant d'un coup. Et si on revend la maison dans 8 ans… » Vous venez de clarifier. Maintenant, vous faites réfléchir. Laquelle de ces phrases l'amène à se répondre à elle-même ?",correct:1,pts:3,skill:'Cadre',rep:'cadre',
   hint:"Le temps 2, c'est une question qui déplace la perspective. Pas un chiffre, pas une contre-objection — une question.",
   opts:[
@@ -1595,7 +1423,6 @@ var D3={q:"Mme Durand dit : « C'est un gros montant d'un coup. Et si on revend 
     {t:"« Vous avez raison d'y penser, mais la plupart de nos clients ne revendent pas avant 20 ans. »",
      fb:"Le « vous avez raison, mais » est le vieux classique commercial — et personne ne s'y laisse plus prendre. Le prospect entend : <em>je vais maintenant contrer ce que vous venez de dire.</em> La réactance se réactive."}
   ]};
-
 var D4={q:"Mme Durand réfléchit et dit : « Non… si on reste, c'est clairement un choix. Mais c'est l'incertitude sur l'avenir qui me freine. » Vous êtes au troisième temps. Qu'est-ce que vous faites ?",correct:0,pts:3,skill:'Connexion',rep:'conn',
   hint:"Le temps 3, c'est une image concrète — pas un chiffre, pas une garantie. Une histoire que l'imagination peut saisir.",
   opts:[
@@ -1606,7 +1433,6 @@ var D4={q:"Mme Durand réfléchit et dit : « Non… si on reste, c'est claireme
     {t:"Proposer de passer à l'étude technique — l'incertitude est levée, il faut concrétiser.",
      fb:"Elle a ouvert une porte. Elle n'a pas signé. Proposer l'étude à ce stade, c'est reprendre la main brutalement. La réactance peut se réactiver en un mot. Laissez l'image faire son travail d'abord."}
   ]};
-
 var D5={q:"Mme Durand dit : « Vous me posez ces questions parce qu'on vous a dit de les poser, non ? » Que répond Lucas ?",correct:2,pts:3,skill:'Authenticité',rep:'auth',
   hint:"Elle ne l'attaque pas — elle lui tend une perche. La bonne réponse ne nie pas, ne défend pas la méthode. Elle revient à l'essentiel.",
   opts:[
@@ -1639,7 +1465,6 @@ var SCENE1=[
   {type:'hide',who:'DURAND'},
   {type:'stand'}
 ];
-
 var SCENE2=[
   {type:'ts',text:'SALON DES DURAND · 15H14 — REJEU'},
   {type:'status',text:'SCÈNE 2 — LA MÉTHODE'},
@@ -1674,13 +1499,13 @@ var SCENE2=[
    ===================================================================== */
 var THEORY=[
   {kicker:'LA RÉACTANCE · 1/4',key:'Pousser, c\'est fermer la porte soi-même.',
-   h:'<p>En 1966, Jack Brehm démontre quelque chose que les commerciaux mettent des années à admettre : <b>plus vous essayez de convaincre quelqu\'un, plus il résiste.</b> Ce n\'est pas de la mauvaise volonté. C\'est un réflexe câblé dans le cerveau.</p><p>Dès que le cerveau du prospect détecte une tentative d\'influence, il active un bouclier — automatiquement, sans décision consciente. Exactement comme un bras qui se lève sans qu\'on décide de le lever.</p><blockquote>La réactance n\'est pas un choix. C\'est un réflexe. Vous ne pouvez pas la combattre — vous pouvez seulement éviter de la déclencher.</blockquote><p>En 2026, les prospects ont vu défiler des centaines de commerciaux. Leur réactance est <b>activée par défaut</b> avant même que vous ouvriez la bouche. Lucas vient de le découvrir à ses dépens.</p>'},
+   h:'<p>En 1966, Jack Brehm démontre quelque chose que les commerciaux mettent des années à admettre : <b>plus vous essayez de convaincre quelqu\'un, plus il résiste.</b> Ce n\'est pas de la mauvaise volonté. C\'est un réflexe câblé dans le cerveau.</p><p>Dès que le cerveau du prospect détecte une tentative d\'influence, il active un bouclier — automatiquement, sans décision consciente.</p><blockquote>La réactance n\'est pas un choix. C\'est un réflexe. Vous ne pouvez pas la combattre — vous pouvez seulement éviter de la déclencher.</blockquote><p>En 2026, les prospects ont vu défiler des centaines de commerciaux. Leur réactance est <b>activée par défaut</b> avant même que vous ouvriez la bouche.</p>'},
   {kicker:'L\'ERREUR UNIVERSELLE · 2/4',key:'Répondre à une objection par un argument — c\'est perdre.',
-   h:'<p>La formation commerciale classique enseigne : objection → réfutation → conclusion. Ce modèle marchait quand les prospects faisaient confiance par défaut. Ce temps est révolu.</p><div class="dd dont"><span>❌ Ce que Lucas vient de faire</span>Durand : C\'est trop cher.<br>Lucas : Je comprends, <b>mais</b> si on calcule sur 25 ans... <br><em>Le mot « mais » annule tout ce qui précède. Le cerveau entend : vous avez tort.</em></div><div class="dd dont"><span>❌ L\'autre piège</span>Durand : Et si les panneaux s\'abîment ?<br>Lucas : Ils sont garantis 25 ans, les études montrent...<br><em>Elle exprimait une peur. Il sort des chiffres. Deux registres différents — l\'un émotionnel, l\'autre logique. Ils ne se parlent pas.</em></div><p>Chaque argument renforce le mur. Ce n\'est pas un problème de mauvaise volonté — c\'est de la biologie.</p>'},
+   h:'<p>La formation commerciale classique enseigne : objection → réfutation → conclusion.</p><div class="dd dont"><span>❌ Ce que Lucas vient de faire</span>Durand : C\'est trop cher.<br>Lucas : Je comprends, <b>mais</b> si on calcule sur 25 ans... <br><em>Le mot « mais » annule tout ce qui précède.</em></div><div class="dd dont"><span>❌ L\'autre piège</span>Durand : Et si les panneaux s\'abîment ?<br>Lucas : Ils sont garantis 25 ans...<br><em>Elle exprimait une peur. Il sort des chiffres. Deux registres différents.</em></div><p>Chaque argument renforce le mur. Ce n\'est pas un problème de mauvaise volonté — c\'est de la biologie.</p>'},
   {kicker:'LA MÉTHODE EN 3 TEMPS · 3/4',key:'Clarifier · Faire réfléchir · Déplacer le cadre.',
-   h:'<p>Au lieu de répondre, on fait <b>répondre le prospect</b>. Trois étapes, dans cet ordre strict :</p><div class="dd do"><span>⏱ Temps 1 — Clarifier</span>« Qu\'est-ce qui vous fait dire que c\'est trop cher ? »<em>But : comprendre la vraie nature de l\'objection. Et signaler : vous n\'êtes pas là pour attaquer.</em></div><div class="dd do"><span>⏱ Temps 2 — Faire réfléchir</span>« Si vous étiez certaine de rester 15 ans — ce serait encore une dépense, ou un choix ? »<em>But : amener le prospect à recadrer la question lui-même. Ce qu\'il dit est infiniment plus puissant que ce que vous pourriez dire.</em></div><div class="dd do"><span>⏱ Temps 3 — Déplacer par une image</span>« C\'est un peu comme planter un verger… »<em>But : contourner la résistance en activant l\'imagination plutôt que la logique.</em></div><p>Aucun des trois temps ne contredit. Aucun ne déclenche la réactance. C\'est ce que vous venez de voir Lucas faire — et rater, puis réussir.</p>'},
-  {kicker:'LE POUVOIR DES IMAGES · 4/4',key:'L\'argument parle au juge. L\'image parle à l\'enfant. L\'enfant décide.',
-   h:'<p>Quand vous argumentez, vous activez le cortex préfrontal : la zone analytique, critique, méfiante. Quand vous utilisez une image concrète, vous activez le système limbique : l\'imagination, les émotions, les souvenirs.</p><blockquote>On ne change pas d\'avis avec des faits. On change d\'avis quand on voit les choses autrement.</blockquote><div class="dd do"><span>✓ Structure d\'une bonne image</span>C\'est comme [situation familière au prospect] : [mécanisme] — et c\'est exactement ce qui se passe quand [son contexte].<br><br>Exemple : « Hésiter à cause du ROI à 5 ans, c\'est comme refuser de planter un arbre parce qu\'il ne donne pas de fruits demain. »<em>L\'image ne contredit pas. Elle déplace le cadre de pensée.</em></div><p>Aucune argumentation ne peut résister à une bonne image — parce qu\'il n\'y a rien à débattre contre une histoire.</p>'}
+   h:'<p>Au lieu de répondre, on fait <b>répondre le prospect</b>. Trois étapes, dans cet ordre strict :</p><div class="dd do"><span>⏱ Temps 1 — Clarifier</span>« Qu\'est-ce qui vous fait dire que c\'est trop cher ? »<em>But : comprendre la vraie nature de l\'objection.</em></div><div class="dd do"><span>⏱ Temps 2 — Faire réfléchir</span>« Si vous étiez certaine de rester 15 ans — ce serait encore une dépense, ou un choix ? »<em>But : amener le prospect à recadrer lui-même.</em></div><div class="dd do"><span>⏱ Temps 3 — Déplacer par une image</span>« C\'est un peu comme planter un verger… »<em>But : activer l\'imagination plutôt que la logique.</em></div>' },
+  {kicker:'LE POUVOIR DES IMAGES · 4/4',key:'L\'argument parle au juge. L\'image parle à l\'enfant.',
+   h:'<p>Quand vous argumentez, vous activez le cortex préfrontal. Quand vous utilisez une image concrète, vous activez le système limbique.</p><blockquote>On ne change pas d\'avis avec des faits. On change d\'avis quand on voit les choses autrement.</blockquote><div class="dd do"><span>✓ Structure d\'une bonne image</span>C\'est comme [situation familière au prospect] : [mécanisme] — et c\'est exactement ce qui se passe quand [son contexte].</div><p>Aucune argumentation ne peut résister à une bonne image.</p>'}
 ];
 var thIdx=0,thCb=null;
 function showTheory(cb){
@@ -1698,9 +1523,8 @@ function renderTheory(){
   THEORY.forEach(function(_,i){dots+='<div class="th-dot '+(i<thIdx?'done':i===thIdx?'cur':'')+'"></div>';});
   $('th-progress').innerHTML=dots;
   $('th-next').textContent=thIdx<THEORY.length-1?'Suivant →':'C\'est acquis. On avance ✓';
-  // Lire le titre avec Bruno
-  lipTarget=$('th-char').querySelector('svg')?$('th-char'):null;
-  if(ttsOn&&window.speechSynthesis) speak(t.key+'. '+t.h.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').substring(0,200),'m',null);
+  lipTarget=$('th-char')?$('th-char'):null;
+  if(ttsOn&&window.speechSynthesis) speak(t.key,'m',null);
 }
 $('th-prev').addEventListener('click',function(){if(thIdx>0){thIdx--;renderTheory();}});
 $('th-next').addEventListener('click',function(){
@@ -1714,7 +1538,7 @@ $('th-next').addEventListener('click',function(){
 function showTrap(){
   clearInteraction();setStatus('MISE EN SITUATION');
   var html='<div class="q-wrap">'
-    +'<div class="q-head"><span class="q-badge">VOTRE INTUITION</span><span class="q-pts" data-tip="Cette question ne compte pas dans votre score — elle sert à calibrer votre point de départ.">0 pt · calibration</span></div>'
+    +'<div class="q-head"><span class="q-badge">VOTRE INTUITION</span><span class="q-pts">0 pt · calibration</span></div>'
     +'<div class="q-question">Lucas sonne à la porte. Il sait que Mme Durand a rempli un formulaire — elle est intéressée. Quarante-cinq minutes après s\'être assis, elle dit : « 18 000 euros, c\'est trop cher. »<br><br>Dans son cerveau, que se passe-t-il à ce moment précis ?</div>'
     +'<div class="q-options">';
   TRAP_OPTS.forEach(function(t,i){
@@ -1751,77 +1575,105 @@ function showBrunoIntro(cb){
   clearInteraction();hideAllBubbles();
   $('ts-scene').textContent='COACH COMMERCIAL · BRUNO MALET';
   showChar('BRUNO');setExpr('BRUNO','teaching');
-  setSceneBg((SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/)||[])[1]||'');
+  var _sc=SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
+  setSceneBg(_sc?_sc[1]:'');
   runScene([
-    {type:'voff',text:"Avant d'entrer dans la scène — une présentation s'impose. Bruno Malet, 52 ans, 22 ans de terrain dans le solaire et l'énergie. Il a formé plus de 800 commerciaux en Europe. Il a aussi échoué 400 fois avant de comprendre ce qu'il va vous montrer."},
-    {type:'bubble',who:'BRUNO',text:'22 ans à vendre. Les 10 premières, j\'argumentais comme tout le monde. J\'étais le meilleur pour perdre élégamment. Depuis — je pose des questions. Et je vends. Vous allez regarder quelqu\'un faire exactement ce qu\'il ne faut pas faire. Puis ce qu\'il faut faire. Essayez de voir la différence.',expr:'teaching'}
+    {type:'voff',text:"Avant d'entrer dans la scène — une présentation s'impose. Bruno Malet, 52 ans, 22 ans de terrain dans le solaire et l'énergie. Il a formé plus de 800 commerciaux en Europe."},
+    {type:'bubble',who:'BRUNO',text:'22 ans à vendre. Les 10 premières, j\'argumentais comme tout le monde. J\'étais le meilleur pour perdre élégamment. Depuis — je pose des questions. Et je vends.',expr:'teaching'}
   ],function(){
     hideChar('BRUNO');
-    // Transition vers la porte
     setTimeout(cb,300);
   });
 }
 
 /* =====================================================================
-   ÉCRAN PORTE
+   ÉCRAN PORTE — FIX #3 : garde anti-double-exécution + fallback clavier
    ===================================================================== */
+var doorbellBound=false;
 function showDoorScreen(cb){
   var ds=$('door-screen');
-  // Charger les SVGs
   var _dc=SVG_BG_DOOR.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
   if(_dc)$('door-bg').innerHTML=_dc[1];
   $('c-lucas-door').innerHTML=SVG_LUCAS;
   ds.classList.add('on');
-  // Voix off
-  var vt=$('door-voff'),vtx=$('door-voff-text');
-  vt.style.display='block';
+
+  // Reset états visuels de la sonnette
+  var btn=$('doorbell-btn');
+  var tip=$('doorbell-tip');
+  var vt=$('door-voff');
+  var vtx=$('door-voff-text');
+  if(btn)btn.style.display='none';
+  if(tip)tip.style.display='none';
+  if(vt)vt.style.display='block';
+
   var narText="Lucas se tient devant la porte d'entrée des Durand. 15 heures pétantes. Il a confirmé le rendez-vous ce matin. Monsieur est absent — Madame a accepté de le recevoir seule. Lucas vérifie ses documents, respire. Il sonne.";
-  typeText(vtx,narText,18,function(){
-    $('doorbell-btn').style.display='flex';
-    $('doorbell-tip').style.display='block';
+
+  var unlocked=false;
+  function unlockDoorbell(){
+    if(unlocked)return;unlocked=true;
+    if(btn){
+      btn.style.display='flex';
+      btn.setAttribute('aria-label','Sonnez à la porte');
+      try{ btn.focus({preventScroll:true}); }catch(e){ btn.focus(); }
+    }
+    if(tip)tip.style.display='block';
+  }
+
+  typeText(vtx,narText,18,unlockDoorbell);
+  speak(narText,'narrator',function(){
+    // Sécurité : si la voix off échoue, on force quand même l'affichage
+    unlockDoorbell();
   });
-  speak(narText,'narrator',function(){});
-  $('doorbell-btn').addEventListener('click',function(){
+
+  // Fallback : si la frappe est trop lente ou bloquée, on affiche après 6s maxi
+  setTimeout(unlockDoorbell,6500);
+
+  function onDoorbell(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    if(unlocked===false && btn && btn.style.display==='none'){
+      // clic précoce : on ignore
+      return;
+    }
     playSonnerie();
-    $('doorbell-btn').style.display='none';
-    $('doorbell-tip').style.display='none';
+    if(btn)btn.style.display='none';
+    if(tip)tip.style.display='none';
     stopSpeak();
     setTimeout(function(){
       ds.classList.remove('on');
-      // Transition vers le salon
-      setSceneBg((SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/)||['',''])[1]);
+      var _sal=SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
+      setSceneBg(_sal?_sal[1]:'');
       startAmbiance();
       if(cb)cb();
     },500);
-  },{once:true});
+  }
+
+  if(!doorbellBound && btn){
+    btn.addEventListener('click',onDoorbell);
+    btn.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){ onDoorbell(e); }
+    });
+    doorbellBound=true;
+  }
 }
 
 /* =====================================================================
-   ARENA VOCALE (moteur hybride mots-clés + optionnel API)
+   ARENA VOCALE
    ===================================================================== */
 var SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition||null;
 function evaluateResponse(text,mode){
-  // Moteur niveau 1 : mots-clés pondérés
   var t=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   var score=0,tags=[];
-  // Bons signaux : question ouverte, reformulation
   if(/qu[eé]st[ei][oi]n|pourquoi|comment|qu[e']est[-\s]ce|ce qui vous|ce que vous|vous fait|vous pen/.test(t)){score+=2;tags.push('question_ouverte');}
-  if(/cher[e]?\s+(par\s+rapport|pour\s+vous|pour\s+qui|selon\s+vous|à\s+vos\s+yeux)|qu[eé]st[-\s][ée]?e\s+qui\s+vous\s+fait|concr[eè]tement/.test(t)){score+=2;tags.push('clarification');}
-  // Mauvais signaux
+  if(/cher[e]?\s+(par\s+rapport|pour\s+vous|pour\s+qui|selon\s+vous)|qu[eé]st[-\s][ée]?e\s+qui\s+vous\s+fait/.test(t)){score+=2;tags.push('clarification');}
   if(/\bmais\b/.test(t)){score-=2;tags.push('mais');}
   if(/\d{2,}[\s]*%|retour\s+sur\s+investissement|calcul\s+sur/.test(t)){score-=1;tags.push('chiffre_brut');}
   if(/garantie\s+\d{2}|certifi[eé]|étudie\s+montr/.test(t)){score-=1;tags.push('argument_technique');}
-  // Image/métaphore
   if(/comme\s+(si|un|une|planter|semer|arroser|construire|investir)|analogie|comparaison/.test(t)){score+=2;tags.push('image');}
-  // 3 temps
   if(mode==='3temps'){
     var hasQ=/\?/.test(text);
     var hasIf=/si\s+vous\s+[eé]tiez|si\s+on\s+sav|si\s+vous\s+rest/.test(t);
     var hasImg=/comme\s+(un|une|le|la|planter|semer)|imagine[rz]|pens[eez]\s+[aà]/.test(t);
     if(hasQ)score++;if(hasIf)score++;if(hasImg)score++;
-    tags.push(hasQ?'has_question':'no_question');
-    tags.push(hasIf?'has_conditional':'no_conditional');
-    tags.push(hasImg?'has_image':'no_image');
   }
   return {score:score,tags:tags};
 }
@@ -1829,22 +1681,20 @@ function getFeedback(evResult,mode){
   var s=evResult.score,tags=evResult.tags;
   var has=function(t){return tags.indexOf(t)>-1;};
   if(mode==='first'){
-    if(has('mais'))return {cls:'bad',label:'RÉACTANCE DÉTECTÉE',text:'Le mot « mais » est là. Il efface tout ce qui précède. Le prospect l\'entend comme : <em>vous avez tort</em>. Le mur vient de monter d\'un cran. On reprend ?'};
-    if(has('chiffre_brut'))return {cls:'bad',label:'REGISTRE LOGIQUE',text:'Vous avez répondu à une émotion avec un chiffre. Deux registres qui ne se parlent pas. Elle ressentait — vous avez calculé. La réactance reste active.'};
-    if(has('question_ouverte')||has('clarification'))return {cls:'good',label:'OUVERTURE',text:'Vous avez posé une question. C\'est exactement ça — le cerveau du prospect enregistre une écoute, pas une attaque. Le mur commence à descendre.'};
-    if(s>=2)return {cls:'good',label:'BONNE APPROCHE',text:'Vous avez évité les pièges classiques. Pas d\'argument, pas de pression. C\'est le minimum nécessaire — et la majorité des commerciaux ne l\'atteignent pas.'};
-    if(s>=0)return {cls:'partial',label:'MITIGÉ',text:'Ni vraiment bon ni vraiment raté. Vous n\'avez pas déclenché la réactance — mais vous n\'avez pas non plus ouvert la porte. Essayez avec une question ouverte.'};
-    return {cls:'bad',label:'À RETRAVAILLER',text:'Cette réponse déclenche la résistance. Pas de jugement — c\'est le réflexe de 90 % des commerciaux au premier essai. La bonne nouvelle : ça se corrige vite.'};
+    if(has('mais'))return {cls:'bad',label:'RÉACTANCE DÉTECTÉE',text:'Le mot « mais » est là. Il efface tout ce qui précède. Le prospect l\'entend comme : <em>vous avez tort</em>.'};
+    if(has('chiffre_brut'))return {cls:'bad',label:'REGISTRE LOGIQUE',text:'Vous avez répondu à une émotion avec un chiffre. La réactance reste active.'};
+    if(has('question_ouverte')||has('clarification'))return {cls:'good',label:'OUVERTURE',text:'Vous avez posé une question. Le mur commence à descendre.'};
+    if(s>=2)return {cls:'good',label:'BONNE APPROCHE',text:'Vous avez évité les pièges classiques.'};
+    if(s>=0)return {cls:'partial',label:'MITIGÉ',text:'Ni bon ni raté. Essayez avec une question ouverte.'};
+    return {cls:'bad',label:'À RETRAVAILLER',text:'Cette réponse déclenche la résistance. C\'est le réflexe de 90 % des commerciaux.'};
   }
   if(mode==='3temps'){
-    if(s>=4)return {cls:'good',label:'MÉTHODE MAÎTRISÉE',text:'Les 3 temps sont là : clarification, question de réflexion, image. C\'est ce que font les meilleurs. Bruno note. Vraiment.'};
-    if(s>=2)return {cls:'partial',label:'2 TEMPS SUR 3',text:'Vous avez posé une question et reformulé. Il manque l\'image — l\'élément qui déplace le cadre mental et laisse une trace. Sans elle, l\'argument reste dans la logique, pas dans l\'imaginaire.'};
-    return {cls:'bad',label:'À CONSOLIDER',text:'La méthode n\'est pas encore fluide. Ce n\'est pas grave — c\'est le premier épisode. Ce qui compte : quand vous sentez l\'envie d\'argumenter, arrêtez. Et posez une question à la place.'};
+    if(s>=4)return {cls:'good',label:'MÉTHODE MAÎTRISÉE',text:'Les 3 temps sont là : clarification, question de réflexion, image.'};
+    if(s>=2)return {cls:'partial',label:'2 TEMPS SUR 3',text:'Il manque l\'image — l\'élément qui déplace le cadre mental.'};
+    return {cls:'bad',label:'À CONSOLIDER',text:'La méthode n\'est pas encore fluide. C\'est normal pour un premier épisode.'};
   }
   return {cls:'partial',label:'ANALYSE',text:'Réponse enregistrée.'};
 }
-
-/* ===== INIT ARENA VOCALE ===== */
 function initVoiceArena(cfg){
   var orbId=cfg.orb,labelId=cfg.label,waveId=cfg.wave,transcriptId=cfg.transcript,
       nosupportId=cfg.nosupport,kbId=cfg.kb,kbInputId=cfg.kbInput,kbSendId=cfg.kbSend,
@@ -1852,24 +1702,39 @@ function initVoiceArena(cfg){
       confirmId=cfg.confirm,okBtnId=cfg.ok,editBtnId=cfg.edit,
       editAreaId=cfg.editArea,editInputId=cfg.editInput,editSendId=cfg.editSend,
       mode=cfg.mode,onDone=cfg.onDone;
-  // Injecter SVG Durand dans le mini-avatar de l'arena
   if(cfg.durandChar){var dc=$(cfg.durandChar);if(dc)dc.innerHTML=SVG_DURAND;}
-  // TTS Durand qui prononce l'objection
   if(cfg.durandTextId){
     var dt=$(cfg.durandTextId);
-    if(dt){
-      setTimeout(function(){
-        speak(dt.textContent,'f',null);
-        setExpr('DURAND','skeptical'); // sur l'avatar principal si visible
-      },400);
-    }
+    if(dt){ setTimeout(function(){ speak(dt.textContent,'f',null); },400); }
   }
   var orb=$(orbId);if(!orb)return;
   var recognized='',finalText='';
+
+  function processResponse(text){
+    var ev=evaluateResponse(text,mode);
+    var fb=getFeedback(ev,mode);
+    if(fb.cls==='good'&&state.lostPoints>0){
+      state.score=Math.min(state.maxScore,state.score+1);state.lostPoints--;score$();ptsPopup(1);playSuccess();
+    }
+    var fbEl=$(fbId),flEl=$(fbLabelId),ftEl=$(fbTextId),faEl=$(fbActionsId);
+    if(fbEl)fbEl.className='va-feedback show '+fb.cls;
+    if(flEl)flEl.textContent=fb.label;
+    if(ftEl)ftEl.innerHTML=fb.text;
+    if(faEl){
+      faEl.innerHTML='';
+      if(onDone){
+        var btn=document.createElement('button');btn.className='btn-go';btn.textContent='Continuer →';
+        btn.addEventListener('click',function(){var o=$(cfg.ovId);if(o)o.classList.remove('on');onDone();});
+        faEl.appendChild(btn);
+      }
+    }
+    orb.className='va-mic-orb idle';
+    var lbl=$(labelId);if(lbl)lbl.textContent='Appuyez pour rejouer';
+  }
+
   if(!SpeechRec){
     var ns=$(nosupportId);if(ns)ns.classList.add('show');
     var kb=$(kbId);if(kb)kb.style.display='flex';
-    // saisie clavier
     var sendBtn=$(kbSendId);
     if(sendBtn)sendBtn.addEventListener('click',function(){
       var inp=$(kbInputId);if(!inp||!inp.value.trim())return;
@@ -1877,13 +1742,15 @@ function initVoiceArena(cfg){
     });
     return;
   }
+
   var rec=new SpeechRec();
   rec.lang='fr-FR';rec.interimResults=true;rec.continuous=false;
   var listening=false;
+
   function startListen(){
     if(listening)return;listening=true;
     orb.className='va-mic-orb listening';
-    $(labelId).textContent='En écoute…';
+    var lbl=$(labelId);if(lbl)lbl.textContent='En écoute…';
     var wv=$(waveId);if(wv)wv.classList.add('active');
     var tr=$(transcriptId);if(tr){tr.classList.add('listening');tr.innerHTML='';}
     try{rec.start();}catch(e){}
@@ -1891,15 +1758,15 @@ function initVoiceArena(cfg){
   function stopListen(){
     listening=false;
     orb.className='va-mic-orb done';
-    $(labelId).textContent='Traitement…';
+    var lbl=$(labelId);if(lbl)lbl.textContent='Traitement…';
     var wv=$(waveId);if(wv)wv.classList.remove('active');
     var tr=$(transcriptId);if(tr)tr.classList.remove('listening');
     try{rec.stop();}catch(e){}
   }
-  orb.addEventListener('click',function(){
-    if(listening)stopListen();else startListen();
+  orb.addEventListener('click',function(){ if(listening)stopListen();else startListen(); });
+  orb.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();if(listening)stopListen();else startListen();}
   });
-  orb.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();if(listening)stopListen();else startListen();}});
   rec.onresult=function(e){
     var interim='',fin='';
     for(var i=0;i<e.results.length;i++){
@@ -1912,29 +1779,25 @@ function initVoiceArena(cfg){
   rec.onend=function(){
     if(recognized){
       finalText=recognized;
-      $(labelId).textContent='Appuyez pour reparler';
+      var lbl=$(labelId);if(lbl)lbl.textContent='Appuyez pour reparler';
       orb.className='va-mic-orb idle';
-      // Afficher boutons de confirmation
       var cf=$(confirmId);if(cf)cf.classList.add('show');
     } else {
-      $(labelId).textContent='Rien enregistré — réessayez';
+      var lbl=$(labelId);if(lbl)lbl.textContent='Rien enregistré — réessayez';
       orb.className='va-mic-orb idle';
     }
   };
-  // Bouton OK
   var okB=$(okBtnId);
   if(okB)okB.addEventListener('click',function(){
     var cf=$(confirmId);if(cf)cf.classList.remove('show');
     processResponse(finalText);
   });
-  // Bouton Corriger
   var editB=$(editBtnId);
   if(editB)editB.addEventListener('click',function(){
     var ea=$(editAreaId);if(ea)ea.classList.add('show');
     var ei=$(editInputId);if(ei){ei.value=finalText;ei.focus();}
     var cf=$(confirmId);if(cf)cf.classList.remove('show');
   });
-  // Envoyer correction
   var es=$(editSendId);
   if(es)es.addEventListener('click',function(){
     var ei=$(editInputId);if(!ei||!ei.value.trim())return;
@@ -1942,7 +1805,6 @@ function initVoiceArena(cfg){
     var ea=$(editAreaId);if(ea)ea.classList.remove('show');
     processResponse(ei.value.trim());
   });
-  // Clavier fallback
   var kbSend=$(kbSendId);
   if(kbSend)kbSend.addEventListener('click',function(){
     var inp=$(kbInputId);if(!inp||!inp.value.trim())return;
@@ -1950,29 +1812,6 @@ function initVoiceArena(cfg){
     var cf=$(confirmId);if(cf)cf.classList.remove('show');
     processResponse(inp.value.trim());
   });
-
-  function processResponse(text){
-    var ev=evaluateResponse(text,mode);
-    var fb=getFeedback(ev,mode);
-    // Bonus points éventuels (si une question vocale rapporte)
-    if(fb.cls==='good'&&state.lostPoints>0){
-      state.score=Math.min(state.maxScore,state.score+1);state.lostPoints--;score$();ptsPopup(1);playSuccess();
-    }
-    var fbEl=$(fbId),flEl=$(fbLabelId),ftEl=$(fbTextId),faEl=$(fbActionsId);
-    if(fbEl){fbEl.className='va-feedback show '+fb.cls;}
-    if(flEl)flEl.textContent=fb.label;
-    if(ftEl)ftEl.innerHTML=fb.text;
-    if(faEl){
-      faEl.innerHTML='';
-      if(onDone){
-        var btn=document.createElement('button');btn.className='btn-go';btn.textContent='Continuer →';
-        btn.addEventListener('click',function(){$(cfg.ovId)&&$(cfg.ovId).classList.remove('on');onDone();});
-        faEl.appendChild(btn);
-      }
-    }
-    orb.className='va-mic-orb idle';
-    $(labelId).textContent='Appuyez pour rejouer';
-  }
 }
 
 /* =====================================================================
@@ -1981,11 +1820,10 @@ function initVoiceArena(cfg){
 function showBilan(){
   setStep(6);setStatus('BILAN');
   $('bil-pts').textContent=state.score;
-  // Profil
   var profiles=[
-    {min:13,t:'SDR Instinctif',d:'Vous avez intégré quelque chose que la plupart des commerciaux mettent des années à admettre. La méthode ne doit jamais devenir automatique — c\'est l\'authenticité qui fait la différence entre un bon et un excellent.'},
-    {min:9,t:'SDR en Développement',d:'Les bases sont là. La transition entre clarification et question de réflexion reste le point critique. C\'est là que votre progression se jouera dans les prochains épisodes.'},
-    {min:5,t:'SDR en Apprentissage',d:'Vous avez saisi certains principes. La méthode en 3 temps n\'est pas encore fluide — c\'est normal pour un premier épisode. Relisez la théorie, repassez le rejeu.'},
+    {min:13,t:'SDR Instinctif',d:'Vous avez intégré quelque chose que la plupart des commerciaux mettent des années à admettre.'},
+    {min:9,t:'SDR en Développement',d:'Les bases sont là. La transition entre clarification et question de réflexion reste le point critique.'},
+    {min:5,t:'SDR en Apprentissage',d:'Vous avez saisi certains principes. La méthode en 3 temps n\'est pas encore fluide.'},
     {min:0,t:'SDR en début de courbe',d:'C\'est normal pour un premier épisode. L\'essentiel à retenir : quand un prospect objecte, ne répondez pas — questionnez.'}
   ];
   var prof=profiles[profiles.length-1];
@@ -1993,7 +1831,6 @@ function showBilan(){
   $('bil-title').textContent=state.score>=13?'Performance remarquable.':state.score>=9?'Bonne maîtrise.':state.score>=5?'Des acquis, des zones à consolider.':'Les fondations restent à poser.';
   $('sdr-profile-title').textContent=prof.t;
   $('sdr-profile-desc').textContent=prof.d;
-  // Jauges rep
   var keys=['posture','cadre','auth','conn'],labels={posture:'Posture',cadre:'Cadre',auth:'Authenticité',conn:'Connexion'};
   var rHtml='';
   keys.forEach(function(k){
@@ -2001,7 +1838,6 @@ function showBilan(){
     rHtml+='<div class="rp-item"><span class="rp-label">'+labels[k]+'</span><div class="rp-track"><div class="rp-fill '+k+'" style="width:'+p+'%"></div></div></div>';
   });
   $('rep-profile-bars').innerHTML=rHtml;
-  // Lignes bilan
   var rowsHtml='';
   state.results.forEach(function(r){
     var cls=r.first?'ok':r.pts>0?'mid':'ko';
@@ -2009,19 +1845,18 @@ function showBilan(){
     rowsHtml+='<div class="bilan-row '+cls+'"><div class="br-skill">'+r.skill+'</div><div class="br-pts">'+r.pts+'/'+r.max+'</div><div class="br-verdict">'+verdict+'</div></div>';
   });
   $('bil-rows').innerHTML=rowsHtml;
-  // Mémo Bruno
   var weak=state.results.filter(function(r){return !r.ok;}).map(function(r){return r.skill;});
   var memo='<div class="bruno-memo-head">MÉMO DE BRUNO</div>';
   if(state.score>=13){
-    memo+='<b>Bon. Je retire ce que j\'avais préparé.</b> J\'avais une belle liste d\'erreurs. Vous ne me l\'avez pas laissée utiliser. Le vrai test : est-ce que ça tient sous pression, avec un prospect qui n\'a aucune intention de vous faciliter la vie ? Ça, on verra à l\'épisode 2.';
+    memo+='<b>Bon. Je retire ce que j\'avais préparé.</b> Le vrai test : est-ce que ça tient sous pression à l\'épisode 2 ?';
   } else if(state.score>=9){
     memo+='<b>Pas mal.</b> ';
-    if(weak.length)memo+='Vous avez trébuché sur <em>'+weak.join(' et ')+'</em>. Ce n\'est pas un hasard — c\'est exactement là que les commerciaux coincent. ';
+    if(weak.length)memo+='Vous avez trébuché sur <em>'+weak.join(' et ')+'</em>. ';
     memo+='Les bases y sont. On monte d\'un cran dans le prochain épisode.';
   } else {
     memo+='<b>Honnêtement ?</b> ';
-    if(weak.length)memo+='<em>'+weak.join(', ')+'</em> — voilà ce qui reste à travailler. Ce n\'est pas un reproche, c\'est un diagnostic. ';
-    memo+='Relisez la théorie. Repassez le rejeu. La méthode ne s\'intègre pas en un visionnage. Personne n\'a dit que ce serait simple.';
+    if(weak.length)memo+='<em>'+weak.join(', ')+'</em> — voilà ce qui reste à travailler. ';
+    memo+='Relisez la théorie. Personne n\'a dit que ce serait simple.';
   }
   memo+='<br><br><b>Les trois temps. Par cœur :</b><br>'
        +'1. <b>Clarifier</b> — « Qu\'est-ce qui vous fait dire ça ? »<br>'
@@ -2032,8 +1867,6 @@ function showBilan(){
   if(state.score>=15)launchConfetti();
   $('ov-bilan').classList.add('on');
 }
-
-/* ===== CONFETTI ===== */
 function launchConfetti(){
   var cols=['#9a7420','#0d7a6e','#2563a8','#c43030','#f0d060','#8a4a8a'];
   for(var i=0;i<64;i++){
@@ -2053,14 +1886,11 @@ function launchConfetti(){
 function showFinal(){
   $('ov-final').classList.add('on');setStatus('FIN');setStep(7);stopAmbiance();
   var wrap=document.querySelector('.cliff-wrap');
-  // Score reveal
   var sr=document.createElement('div');sr.className='cliff-score-reveal';
   sr.innerHTML='<div class="cliff-score-number">'+state.score+'/15</div><div class="cliff-score-sub">SCORE FINAL</div>';
   wrap.appendChild(sr);
   playTension(null);
-  // Barre de tension
   setTimeout(function(){$('cliff-tension').classList.add('grow');},300);
-  // Après 3s, retirer le score, afficher le cliffhanger
   setTimeout(function(){
     sr.style.animation='cscore-in .5s ease reverse forwards';
     setTimeout(function(){
@@ -2074,19 +1904,20 @@ function showFinal(){
     t.style.background='var(--teal)';t.textContent='✓ Vous serez notifié à la sortie de l\'épisode 2';
     document.body.appendChild(t);setTimeout(function(){t.remove();},2800);
   });
+  $('btn-restart').addEventListener('click',function(){location.reload();});
 }
 
 /* =====================================================================
-   ONBOARDING TOOLTIPS (1er lancement)
+   ONBOARDING
    ===================================================================== */
 function showOnboarding(){
   if(localStorage.getItem('alizeo_onboard'))return;
   var tips=[
     {el:'hud-score',title:'Votre score',text:'15 points en jeu. Bonnes réponses = points. Ratées ? Essayez une 2e fois pour en récupérer.',arrow:'bottom-arrow'},
-    {el:'rep-bar',title:'Vos compétences',text:'4 dimensions de la vente. Elles se construisent sur tous les épisodes de la saison.',arrow:'bottom-arrow'},
-    {el:'progress-bar',title:'Progression',text:'8 étapes dans cet épisode. Chaque point représente une phase.',arrow:'bottom-arrow'},
-    {el:'btn-tts',title:'Son',text:'Activez le son pour une immersion totale. Chaque personnage a sa propre voix.',arrow:'bottom-arrow'},
-    {el:'click-hint',title:'Navigation',text:'Cliquez n\'importe où sur la scène pour avancer — même pendant qu\'un personnage parle.',arrow:'top-arrow'}
+    {el:'rep-bar',title:'Vos compétences',text:'4 dimensions de la vente.',arrow:'bottom-arrow'},
+    {el:'progress-bar',title:'Progression',text:'8 étapes dans cet épisode.',arrow:'bottom-arrow'},
+    {el:'btn-tts',title:'Son',text:'Activez le son pour une immersion totale.',arrow:'bottom-arrow'},
+    {el:'click-hint',title:'Navigation',text:'Cliquez n\'importe où sur la scène pour avancer.',arrow:'top-arrow'}
   ];
   var idx=0;
   function showTip(){
@@ -2115,10 +1946,8 @@ function showOnboarding(){
 /* =====================================================================
    INTRO CINÉMA
    ===================================================================== */
-var introSlides=document.querySelectorAll('.intro-slide');
 var introIdx=0,introTimer=null,introDone=false;
 function startIntro(){
-  // Toudoum
   playToudoum();
   var logo=$('toudoum-logo');
   setTimeout(function(){logo.classList.add('show');},200);
@@ -2148,7 +1977,7 @@ function showIntroSlides(){
     var slideTexts=[
       'ALIZÉO — Saison 1 Épisode 1. La réactance. Pourquoi argumenter tue la vente.',
       'En 2026, vendre est un sport de contact. Les prospects sont informés, méfiants, et conditionnés à résister.',
-      'La formation classique enseigne : argumenter, rassurer, conclure. Ces méthodes ont 40 ans. Elles déclenchent aujourd\'hui la réactance — et ferment plus de portes qu\'elles n\'en ouvrent.',
+      'La formation classique enseigne : argumenter, rassurer, conclure. Ces méthodes ont 40 ans. Elles déclenchent aujourd\'hui la réactance.',
       'Les meilleurs commerciaux d\'Europe ont compris quelque chose qui semble contre-intuitif : pour vendre plus, il faut parfois arrêter de vendre.',
       'Après cette formation, vous ne serez plus jamais le même vendeur.'
     ];
@@ -2164,17 +1993,17 @@ function skipIntro(){
   var cin=$('intro-cinema');
   cin.style.opacity='0';
   setTimeout(function(){
-    cin.classList.add('out');cin.style.opacity='';
+    cin.classList.add('out');
+    cin.style.opacity='';
     afterIntro();
   },650);
 }
 $('btn-skip-intro').addEventListener('click',skipIntro);
 function afterIntro(){
   showOnboarding();
-  // Charger salon en fond
-  var _sc=SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/);if(_sc)$('scene-bg').innerHTML=_sc[1];
+  var _sc=SVG_BG_SALON.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
+  if(_sc)$('scene-bg').innerHTML=_sc[1];
   initChars();updateRep();updateTtsBtn();
-  // Afficher la question piège dans l'interaction
   setStep(0);setStatus('MISE EN SITUATION');
   clearInteraction();showTrap();
 }
@@ -2182,18 +2011,12 @@ function afterIntro(){
 /* =====================================================================
    BOUTONS & FLOW PRINCIPAL
    ===================================================================== */
-$('btn-reveal') && $('btn-reveal');// not used
 $('btn-to-door').addEventListener('click',function(){
   $('ov-reveal').classList.remove('on');
-  // Présentation Bruno d'abord
   showBrunoIntro(function(){
-    // Puis la porte
     showDoorScreen(function(){
-      // Puis scène 1
       runScene(SCENE1, function(){
-        // Théorie
         showTheory(function(){
-          // Pratique mid
           setStep(4);
           $('ov-practice-mid').classList.add('on');
           initVoiceArena({
@@ -2207,9 +2030,7 @@ $('btn-to-door').addEventListener('click',function(){
             mode:'first',ovId:'ov-practice-mid',
             onDone:function(){
               $('ov-practice-mid').classList.remove('on');
-              // Scène 2
               runScene(SCENE2, function(){
-                // Bilan
                 showBilan();
               });
             }
@@ -2219,12 +2040,10 @@ $('btn-to-door').addEventListener('click',function(){
     });
   });
 });
-
 $('btn-to-practice-end').addEventListener('click',function(){
   $('ov-bilan').classList.remove('on');
   setStep(6);
   $('ov-practice-end').classList.add('on');
-  // Afficher Mme Durand et faire prononcer l'objection
   initVoiceArena({
     orb:'va-orb-end',label:'va-label-end',wave:'va-wave-end',
     transcript:'va-transcript-end',nosupport:'va-nosupport-end',
@@ -2239,7 +2058,6 @@ $('btn-to-practice-end').addEventListener('click',function(){
       showFinal();
     }
   });
-  // Révéler progressivement les éléments de l'arena end
   setTimeout(function(){
     $('va-yourturn-end').style.display='flex';
     $('va-orb-end').style.display='flex';
@@ -2248,9 +2066,7 @@ $('btn-to-practice-end').addEventListener('click',function(){
     $('va-transcript-wrap-end').style.display='block';
     $('va-kb-end').style.display='flex';
   },2500);
-}); 
-
-/* ===== BOUTON TTS ===== */
+});
 function updateTtsBtn(){
   var btn=$('btn-tts');if(!btn)return;
   btn.textContent=ttsOn?'🔊 SON':'🔇 MUET';
@@ -2260,12 +2076,15 @@ $('btn-tts').addEventListener('click',function(){
   ttsOn=!ttsOn;if(!ttsOn)stopSpeak();updateTtsBtn();
 });
 
-/* ===== LANCEMENT ===== */
-document.addEventListener('DOMContentLoaded',function(){
-  // Le DOMContentLoaded peut arriver avant ou après l'injection du script
-});
-// Lancer directement
-startIntro();
+/* =====================================================================
+   LANCEMENT
+   ===================================================================== */
+// FIX #4 — on attend que le DOM soit prêt avant d'initialiser
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',startIntro);
+} else {
+  startIntro();
+}
 
 })();
 </script>
